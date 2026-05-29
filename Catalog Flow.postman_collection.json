@@ -1,0 +1,213 @@
+{
+  "info": {
+    "_postman_id": "50794e9e-939d-4971-a5e3-e4f013ee2692",
+    "name": "Catalog Flow",
+    "description": "Full Catalog Flow: create → update → review → quality issue → get product",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "16144931",
+    "_collection_link": "https://go.postman.co/collection/16144931-50794e9e-939d-4971-a5e3-e4f013ee2692?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "1. Create Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "let id = pm.response.json().data.createProduct.id;",
+              "pm.environment.set(\"productId\", id);",
+              "pm.test(\"Product created\", function () { pm.expect(id).to.not.be.undefined; });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"query\":\"mutation CreateProduct($input: CreateProductInput!) { createProduct(input: $input) { id name } }\",\"variables\":{\"input\":{\"name\":\"Test Product\",\"description\":\"Flow test\",\"price\":99.99,\"categoryId\":null}}}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/graphql",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "2. Update Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Product updated\", function () {",
+              "  pm.expect(pm.response.json().data.updateProduct.id).to.eql(pm.environment.get(\"productId\"));",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"query\":\"mutation UpdateProduct($input: UpdateProductInput!) { updateProduct(input: $input) { id name } }\",\"variables\":{\"input\":{\"id\":\"{{productId}}\",\"name\":\"Updated Product\",\"description\":\"Updated desc\",\"price\":120.50,\"categoryId\":null}}}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/graphql",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "3. Add Review",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Review added\", function () {",
+              "  pm.expect(pm.response.json().data.addReview.rating).to.eql(5);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"query\":\"mutation AddReview($input: AddReviewInput!) { addReview(input: $input) { id rating } }\",\"variables\":{\"input\":{\"productId\":\"{{productId}}\",\"rating\":5,\"comment\":\"Great!\"}}}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/graphql",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "4. Report Quality Issue",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Quality issue reported\", function () {",
+              "  pm.expect(pm.response.json().data.reportQualityIssue.status).to.not.be.null;",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"query\":\"mutation ReportQualityIssue($input: ReportQualityIssueInput!) { reportQualityIssue(input: $input) { id type severity status } }\",\"variables\":{\"input\":{\"productId\":\"{{productId}}\",\"type\":\"Defective Item\",\"severity\":\"High\"}}}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/graphql",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "5. Get Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Product fetched\", function () {",
+              "  pm.expect(pm.response.json().data.product.id).to.eql(pm.environment.get(\"productId\"));",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"query\":\"query GetProduct($id: ID!) { product(id: $id) { id name reviews { rating } } }\",\"variables\":{\"id\":\"{{productId}}\"}}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/graphql",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": ""
+    }
+  ]
+}

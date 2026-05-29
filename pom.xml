@@ -1,0 +1,104 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.example</groupId>
+	<artifactId>modulith-shop</artifactId>
+	<version>1.0.0</version>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>catalog-domain</module>
+		<module>catalog-adapters</module>
+		<module>inventory-domain</module>
+		<module>inventory-adapters</module>
+		<module>orders-domain</module>
+		<module>orders-adapters</module>
+		<module>app</module>
+	</modules>
+
+
+	<properties>
+		<maven.compiler.source>22</maven.compiler.source>
+		<maven.compiler.target>22</maven.compiler.target>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>3.3.0</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springframework.modulith</groupId>
+				<artifactId>spring-modulith-bom</artifactId>
+				<version>1.2.0</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+					<!-- Internal modules -->
+					<dependency>
+						<groupId>com.example</groupId>
+						<artifactId>catalog-domain</artifactId>
+						<version>1.0.0</version>
+					</dependency>
+
+					<dependency>
+						<groupId>com.example</groupId>
+						<artifactId>inventory-domain</artifactId>
+						<version>1.0.0</version>
+					</dependency>
+
+					<dependency>
+						<groupId>com.example</groupId>
+						<artifactId>orders-domain</artifactId>
+						<version>1.0.0</version>
+					</dependency>
+
+					<dependency>
+						<groupId>com.example</groupId>
+						<artifactId>catalog-adapters</artifactId>
+						<version>1.0.0</version>
+					</dependency>
+
+					<dependency>
+						<groupId>com.example</groupId>
+						<artifactId>inventory-adapters</artifactId>
+						<version>1.0.0</version>
+					</dependency>
+
+					<dependency>
+						<groupId>com.example</groupId>
+						<artifactId>orders-adapters</artifactId>
+						<version>1.0.0</version>
+					</dependency>
+
+
+
+
+
+
+		</dependencies>
+
+	</dependencyManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+					<version>3.3.0</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+</project>

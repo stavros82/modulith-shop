@@ -1,0 +1,280 @@
+{
+  "info": {
+    "name": "Modulith Shop Adapters",
+    "description": "Postman collection for Modulith Shop adapters with GraphQL endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Catalog Adapters",
+      "item": [
+        {
+          "name": "Queries",
+          "item": [
+            {
+              "name": "Get Product by ID",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"query\":\"query GetProduct($id: ID!) {\\n  product(id: $id) {\\n    id\\n    name\\n    description\\n    price\\n    category {\\n      id\\n      name\\n    }\\n    reviews {\\n      id\\n      rating\\n      comment\\n      createdAt\\n    }\\n    averageRating\\n  }\\n}\",\"variables\":{\"id\":\"1\"}}"
+                },
+                "url": {
+                  "raw": "http://localhost:8080/graphql",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "graphql"
+                  ]
+                },
+                "description": "Retrieve a single product by ID with all details including reviews and average rating"
+              },
+              "response": []
+            },
+            {
+              "name": "Get All Products",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"query\":\"query GetAllProducts {\\n  products {\\n    id\\n    name\\n    description\\n    price\\n    category {\\n      id\\n      name\\n    }\\n    reviews {\\n      id\\n      rating\\n      comment\\n      createdAt\\n    }\\n    averageRating\\n  }\\n}\"}"
+                },
+                "url": {
+                  "raw": "http://localhost:8080/graphql",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "graphql"
+                  ]
+                },
+                "description": "Retrieve all products with complete details"
+              },
+              "response": []
+            },
+            {
+              "name": "Get All Categories",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"query\":\"query GetAllCategories {\\n  categories {\\n    id\\n    name\\n    parent {\\n      id\\n      name\\n    }\\n  }\\n}\"}"
+                },
+                "url": {
+                  "raw": "http://localhost:8080/graphql",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "graphql"
+                  ]
+                },
+                "description": "Retrieve all product categories with parent category information"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Mutations",
+          "item": [
+            {
+              "name": "Create Product",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"query\":\"mutation CreateProduct($input: CreateProductInput!) {\\n  createProduct(input: $input) {\\n    id\\n    name\\n    description\\n    price\\n    category {\\n      id\\n      name\\n    }\\n  }\\n}\",\"variables\":{\"input\":{\"name\":\"New Product\",\"description\":\"A great new product\",\"price\":\"99.99\",\"categoryId\":\"1\"}}}"
+                },
+                "url": {
+                  "raw": "http://localhost:8080/graphql",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "graphql"
+                  ]
+                },
+                "description": "Create a new product with name, description, price, and optional category"
+              },
+              "response": []
+            },
+            {
+              "name": "Update Product",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"query\":\"mutation UpdateProduct($input: UpdateProductInput!) {\\n  updateProduct(input: $input) {\\n    id\\n    name\\n    description\\n    price\\n    category {\\n      id\\n      name\\n    }\\n  }\\n}\",\"variables\":{\"input\":{\"id\":\"1\",\"name\":\"Updated Product Name\",\"description\":\"Updated description\",\"price\":\"149.99\",\"categoryId\":\"1\"}}}"
+                },
+                "url": {
+                  "raw": "http://localhost:8080/graphql",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "graphql"
+                  ]
+                },
+                "description": "Update an existing product with partial or complete details"
+              },
+              "response": []
+            },
+            {
+              "name": "Add Review",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"query\":\"mutation AddReview($input: AddReviewInput!) {\\n  addReview(input: $input) {\\n    id\\n    rating\\n    comment\\n    createdAt\\n  }\\n}\",\"variables\":{\"input\":{\"productId\":\"1\",\"rating\":5,\"comment\":\"Excellent product! Highly recommended.\"}}}"
+                },
+                "url": {
+                  "raw": "http://localhost:8080/graphql",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "graphql"
+                  ]
+                },
+                "description": "Add a review to a product with rating (1-5) and optional comment"
+              },
+              "response": []
+            },
+            {
+              "name": "Report Quality Issue",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"query\":\"mutation ReportQualityIssue($input: ReportQualityIssueInput!) {\\n  reportQualityIssue(input: $input) {\\n    id\\n    type\\n    severity\\n    status\\n    createdAt\\n  }\\n}\",\"variables\":{\"input\":{\"productId\":\"1\",\"type\":\"Defective Item\",\"severity\":\"High\"}}}"
+                },
+                "url": {
+                  "raw": "http://localhost:8080/graphql",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "graphql"
+                  ]
+                },
+                "description": "Report a quality issue for a product with type and severity level"
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Inventory Adapters",
+      "item": [
+        {
+          "name": "Note: Inventory adapters endpoints to be documented",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://localhost:8080",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080"
+            },
+            "description": "Inventory adapter endpoints are not yet configured. Please configure REST or GraphQL endpoints in inventory-adapters module."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Orders Adapters",
+      "item": [
+        {
+          "name": "Note: Orders adapters endpoints to be documented",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://localhost:8080",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080"
+            },
+            "description": "Orders adapter endpoints are not yet configured. Please configure REST or GraphQL endpoints in orders-adapters module."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
+

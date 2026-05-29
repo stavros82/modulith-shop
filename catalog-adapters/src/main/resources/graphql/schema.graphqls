@@ -1,0 +1,98 @@
+scalar BigDecimal
+scalar DateTime
+
+
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+
+# ============================
+#           TYPES
+# ============================
+
+type Product {
+  id: ID!
+  name: String!
+  description: String
+  price: BigDecimal!
+  category: Category
+  reviews: [Review!]!
+  averageRating: Float
+}
+
+type Category {
+  id: ID!
+  name: String!
+  parent: Category
+}
+
+type Review {
+  id: ID!
+  rating: Int!
+  comment: String
+  productId: ID!
+  createdAt: DateTime!
+}
+
+type QualityIssue {
+  id: ID!
+  type: String!
+  severity: String!
+  status: String!
+  createdAt: DateTime!
+}
+
+# ============================
+#           QUERIES
+# ============================
+
+type Query {
+  product(id: ID!): Product
+  products: [Product!]!
+  categories: [Category!]!
+}
+
+# ============================
+#          MUTATIONS
+# ============================
+
+type Mutation {
+  createProduct(input: CreateProductInput!): Product!
+  updateProduct(input: UpdateProductInput!): Product!
+  addReview(input: AddReviewInput!): Review!
+  reportQualityIssue(input: ReportQualityIssueInput!): QualityIssue!
+}
+
+# ============================
+#           INPUTS
+# ============================
+
+input CreateProductInput {
+  name: String!
+  description: String
+  price: BigDecimal!
+  categoryId: ID
+}
+
+input UpdateProductInput {
+  id: ID!
+  name: String
+  description: String
+  price: BigDecimal
+  categoryId: ID
+}
+
+input AddReviewInput {
+  productId: ID!
+  rating: Int!
+  comment: String
+}
+
+input ReportQualityIssueInput {
+  productId: ID!
+  type: String!
+  severity: String!
+}
+
