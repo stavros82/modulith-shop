@@ -26,7 +26,7 @@ public class QualityIssueRepositoryImpl implements QualityIssueRepository {
 
     @Override
     public List<QualityIssue> findByProductId(String productId) {
-        return jpa.findById(productId).stream()
+        return jpa.findByProduct_Id(productId).stream()
                 .map(QualityIssuePersistenceMapper::toDomain)
                 .toList();
     }

@@ -10,4 +10,6 @@ public interface CategoryRepository {
     Optional<Category> findById(String id);
 
     List<Category> findAll();
+
+    Category save(Category category);
 }

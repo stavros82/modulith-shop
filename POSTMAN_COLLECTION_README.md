@@ -51,9 +51,11 @@ You should see the GraphiQL interface.
 - **Get Product by ID** - `POST /graphql` - Retrieve a single product
 - **Get All Products** - `POST /graphql` - List all products
 - **Get All Categories** - `POST /graphql` - List all categories
+- **Get Catalog Report** - `POST /graphql` - Aggregated stats per product and category (reviews, ratings, quality issues, averages)
 
 #### Mutations
-- **Create Product** - `POST /graphql` - Add a new product
+- **Create Category** - `POST /graphql` - Add a category (optional `parentId` for sub-categories)
+- **Create Product** - `POST /graphql` - Add a new product (use `categoryId` from Create Category)
 - **Update Product** - `POST /graphql` - Update existing product
 - **Add Review** - `POST /graphql` - Add product review
 - **Report Quality Issue** - `POST /graphql` - Report quality issues

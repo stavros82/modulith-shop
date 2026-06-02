@@ -97,14 +97,9 @@
                 "description": "Retrieve all product categories with parent category information"
               },
               "response": []
-            }
-          ]
-        },
-        {
-          "name": "Mutations",
-          "item": [
+            },
             {
-              "name": "Create Product",
+              "name": "Get Catalog Report",
               "request": {
                 "method": "POST",
                 "header": [
@@ -115,7 +110,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\"query\":\"mutation CreateProduct($input: CreateProductInput!) {\\n  createProduct(input: $input) {\\n    id\\n    name\\n    description\\n    price\\n    category {\\n      id\\n      name\\n    }\\n  }\\n}\",\"variables\":{\"input\":{\"name\":\"New Product\",\"description\":\"A great new product\",\"price\":\"99.99\",\"categoryId\":\"1\"}}}"
+                  "raw": "{\"query\":\"query CatalogReport {\\n  catalogReport {\\n    summary {\\n      totalProducts\\n      totalCategories\\n      totalReviews\\n      totalQualityIssues\\n      averageProductPrice\\n      overallAverageRating\\n    }\\n    productStats {\\n      productId\\n      productName\\n      categoryId\\n      categoryName\\n      price\\n      reviewCount\\n      averageRating\\n      qualityIssueCount\\n    }\\n    categoryStats {\\n      categoryId\\n      categoryName\\n      productCount\\n      reviewCount\\n      averageRating\\n      averageProductPrice\\n      qualityIssueCount\\n    }\\n  }\\n}\"}"
                 },
                 "url": {
                   "raw": "http://localhost:8080/graphql",
@@ -128,7 +123,94 @@
                     "graphql"
                   ]
                 },
-                "description": "Create a new product with name, description, price, and optional category"
+                "description": "Aggregated catalog statistics per product and category for frontend reporting dashboards"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Mutations",
+          "item": [
+            {
+              "name": "Create Category",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const id = pm.response.json().data.createCategory.id;",
+                      "pm.collectionVariables.set(\"categoryId\", id);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"query\":\"mutation CreateCategory($input: CreateCategoryInput!) {\\n  createCategory(input: $input) {\\n    id\\n    name\\n    parent {\\n      id\\n      name\\n    }\\n  }\\n}\",\"variables\":{\"input\":{\"name\":\"Electronics\",\"parentId\":null}}}"
+                },
+                "url": {
+                  "raw": "http://localhost:8080/graphql",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "graphql"
+                  ]
+                },
+                "description": "Create a product category. Optional parentId for sub-categories. Run before Create Product."
+              },
+              "response": []
+            },
+            {
+              "name": "Create Product",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const id = pm.response.json().data.createProduct.id;",
+                      "pm.collectionVariables.set(\"productId\", id);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"query\":\"mutation CreateProduct($input: CreateProductInput!) {\\n  createProduct(input: $input) {\\n    id\\n    name\\n    description\\n    price\\n    category {\\n      id\\n      name\\n    }\\n  }\\n}\",\"variables\":{\"input\":{\"name\":\"New Product\",\"description\":\"A great new product\",\"price\":\"99.99\",\"categoryId\":\"{{categoryId}}\"}}}"
+                },
+                "url": {
+                  "raw": "http://localhost:8080/graphql",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "graphql"
+                  ]
+                },
+                "description": "Create a new product linked to a category. Run Create Category first (sets {{categoryId}})."
               },
               "response": []
             },
@@ -144,7 +226,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\"query\":\"mutation UpdateProduct($input: UpdateProductInput!) {\\n  updateProduct(input: $input) {\\n    id\\n    name\\n    description\\n    price\\n    category {\\n      id\\n      name\\n    }\\n  }\\n}\",\"variables\":{\"input\":{\"id\":\"1\",\"name\":\"Updated Product Name\",\"description\":\"Updated description\",\"price\":\"149.99\",\"categoryId\":\"1\"}}}"
+                  "raw": "{\"query\":\"mutation UpdateProduct($input: UpdateProductInput!) {\\n  updateProduct(input: $input) {\\n    id\\n    name\\n    description\\n    price\\n    category {\\n      id\\n      name\\n    }\\n  }\\n}\",\"variables\":{\"input\":{\"id\":\"{{productId}}\",\"name\":\"Updated Product Name\",\"description\":\"Updated description\",\"price\":\"149.99\",\"categoryId\":\"{{categoryId}}\"}}}"
                 },
                 "url": {
                   "raw": "http://localhost:8080/graphql",
@@ -274,6 +356,16 @@
           "response": []
         }
       ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "categoryId",
+      "value": ""
+    },
+    {
+      "key": "productId",
+      "value": ""
     }
   ]
 }

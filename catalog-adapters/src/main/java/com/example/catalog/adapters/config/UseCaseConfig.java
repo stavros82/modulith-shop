@@ -1,6 +1,7 @@
 package com.example.catalog.adapters.config;
 
 
+import com.example.catalog.repository.CategoryRepository;
 import com.example.catalog.repository.ProductRepository;
 import com.example.catalog.repository.QualityIssueRepository;
 import com.example.catalog.repository.ReviewRepository;
@@ -12,13 +13,24 @@ import org.springframework.context.annotation.Configuration;
 public class UseCaseConfig {
 
     @Bean
-    public CreateProductUseCase createProductUseCase(ProductRepository productRepository) {
-        return new CreateProductUseCase(productRepository);
+    public CreateCategoryUseCase createCategoryUseCase(CategoryRepository categoryRepository) {
+        return new CreateCategoryUseCase(categoryRepository);
     }
 
     @Bean
-    public UpdateProductUseCase updateProductUseCase(ProductRepository productRepository) {
-        return new UpdateProductUseCase(productRepository);
+    public CreateProductUseCase createProductUseCase(
+            ProductRepository productRepository,
+            CategoryRepository categoryRepository
+    ) {
+        return new CreateProductUseCase(productRepository, categoryRepository);
+    }
+
+    @Bean
+    public UpdateProductUseCase updateProductUseCase(
+            ProductRepository productRepository,
+            CategoryRepository categoryRepository
+    ) {
+        return new UpdateProductUseCase(productRepository, categoryRepository);
     }
 
     @Bean
@@ -39,5 +51,20 @@ public class UseCaseConfig {
     @Bean
     public ReportQualityIssueUseCase reportQualityIssueUseCase(QualityIssueRepository qualityIssueRepository) {
         return new ReportQualityIssueUseCase(qualityIssueRepository);
+    }
+
+    @Bean
+    public GetCatalogReportUseCase getCatalogReportUseCase(
+            ProductRepository productRepository,
+            CategoryRepository categoryRepository,
+            ReviewRepository reviewRepository,
+            QualityIssueRepository qualityIssueRepository
+    ) {
+        return new GetCatalogReportUseCase(
+                productRepository,
+                categoryRepository,
+                reviewRepository,
+                qualityIssueRepository
+        );
     }
 }

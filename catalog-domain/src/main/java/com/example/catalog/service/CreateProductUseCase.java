@@ -1,7 +1,9 @@
 package com.example.catalog.service;
 
 
+import com.example.catalog.exception.CategoryNotFoundException;
 import com.example.catalog.model.Product;
+import com.example.catalog.repository.CategoryRepository;
 import com.example.catalog.repository.ProductRepository;
 
 import java.math.BigDecimal;
@@ -10,12 +12,16 @@ import java.util.UUID;
 public class CreateProductUseCase {
 
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
-    public CreateProductUseCase(ProductRepository productRepository) {
+    public CreateProductUseCase(ProductRepository productRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     public Product execute(String name, String description, BigDecimal price, String categoryId) {
+        requireCategoryExists(categoryId);
+
         Product product = new Product(
                 UUID.randomUUID().toString(),
                 name,
@@ -25,5 +31,11 @@ public class CreateProductUseCase {
         );
 
         return productRepository.save(product);
+    }
+
+    private void requireCategoryExists(String categoryId) {
+        if (categoryId != null && categoryRepository.findById(categoryId).isEmpty()) {
+            throw new CategoryNotFoundException(categoryId);
+        }
     }
 }

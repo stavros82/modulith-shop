@@ -2,22 +2,22 @@
   "info": {
     "_postman_id": "50794e9e-939d-4971-a5e3-e4f013ee2692",
     "name": "Catalog Flow",
-    "description": "Full Catalog Flow: create → update → review → quality issue → get product",
+    "description": "Full Catalog Flow: create category → create product → update → review → quality issue → get product → catalog report",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "16144931",
     "_collection_link": "https://go.postman.co/collection/16144931-50794e9e-939d-4971-a5e3-e4f013ee2692?source=collection_link"
   },
   "item": [
     {
-      "name": "1. Create Product",
+      "name": "1. Create Category",
       "event": [
         {
           "listen": "test",
           "script": {
             "exec": [
-              "let id = pm.response.json().data.createProduct.id;",
-              "pm.environment.set(\"productId\", id);",
-              "pm.test(\"Product created\", function () { pm.expect(id).to.not.be.undefined; });"
+              "let id = pm.response.json().data.createCategory.id;",
+              "pm.environment.set(\"categoryId\", id);",
+              "pm.test(\"Category created\", function () { pm.expect(id).to.not.be.undefined; });"
             ],
             "type": "text/javascript"
           }
@@ -33,7 +33,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\"query\":\"mutation CreateProduct($input: CreateProductInput!) { createProduct(input: $input) { id name } }\",\"variables\":{\"input\":{\"name\":\"Test Product\",\"description\":\"Flow test\",\"price\":99.99,\"categoryId\":null}}}"
+          "raw": "{\"query\":\"mutation CreateCategory($input: CreateCategoryInput!) { createCategory(input: $input) { id name } }\",\"variables\":{\"input\":{\"name\":\"Electronics\",\"parentId\":null}}}"
         },
         "url": {
           "raw": "{{baseUrl}}/graphql",
@@ -48,7 +48,49 @@
       "response": []
     },
     {
-      "name": "2. Update Product",
+      "name": "2. Create Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "let id = pm.response.json().data.createProduct.id;",
+              "pm.environment.set(\"productId\", id);",
+              "pm.test(\"Product created\", function () { pm.expect(id).to.not.be.undefined; });",
+              "pm.test(\"Product has category\", function () {",
+              "  pm.expect(pm.response.json().data.createProduct.category.id).to.eql(pm.environment.get(\"categoryId\"));",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"query\":\"mutation CreateProduct($input: CreateProductInput!) { createProduct(input: $input) { id name category { id name } } }\",\"variables\":{\"input\":{\"name\":\"Test Product\",\"description\":\"Flow test\",\"price\":99.99,\"categoryId\":\"{{categoryId}}\"}}}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/graphql",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "3. Update Product",
       "event": [
         {
           "listen": "test",
@@ -72,7 +114,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\"query\":\"mutation UpdateProduct($input: UpdateProductInput!) { updateProduct(input: $input) { id name } }\",\"variables\":{\"input\":{\"id\":\"{{productId}}\",\"name\":\"Updated Product\",\"description\":\"Updated desc\",\"price\":120.50,\"categoryId\":null}}}"
+          "raw": "{\"query\":\"mutation UpdateProduct($input: UpdateProductInput!) { updateProduct(input: $input) { id name category { id name } } }\",\"variables\":{\"input\":{\"id\":\"{{productId}}\",\"name\":\"Updated Product\",\"description\":\"Updated desc\",\"price\":120.50,\"categoryId\":\"{{categoryId}}\"}}}"
         },
         "url": {
           "raw": "{{baseUrl}}/graphql",
@@ -87,7 +129,7 @@
       "response": []
     },
     {
-      "name": "3. Add Review",
+      "name": "4. Add Review",
       "event": [
         {
           "listen": "test",
@@ -126,7 +168,7 @@
       "response": []
     },
     {
-      "name": "4. Report Quality Issue",
+      "name": "5. Report Quality Issue",
       "event": [
         {
           "listen": "test",
@@ -165,7 +207,7 @@
       "response": []
     },
     {
-      "name": "5. Get Product",
+      "name": "6. Get Product",
       "event": [
         {
           "listen": "test",
@@ -189,7 +231,49 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\"query\":\"query GetProduct($id: ID!) { product(id: $id) { id name reviews { rating } } }\",\"variables\":{\"id\":\"{{productId}}\"}}"
+          "raw": "{\"query\":\"query GetProduct($id: ID!) { product(id: $id) { id name category { id name } reviews { rating } } }\",\"variables\":{\"id\":\"{{productId}}\"}}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/graphql",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "7. Get Catalog Report",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Catalog report returned\", function () {",
+              "  const report = pm.response.json().data.catalogReport;",
+              "  pm.expect(report.summary).to.not.be.null;",
+              "  pm.expect(report.productStats).to.be.an(\"array\");",
+              "  pm.expect(report.categoryStats).to.be.an(\"array\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"query\":\"query CatalogReport { catalogReport { summary { totalProducts totalCategories totalReviews totalQualityIssues averageProductPrice overallAverageRating } productStats { productId productName categoryId categoryName price reviewCount averageRating qualityIssueCount } categoryStats { categoryId categoryName productCount reviewCount averageRating averageProductPrice qualityIssueCount } } }\"}"
         },
         "url": {
           "raw": "{{baseUrl}}/graphql",
