@@ -1,5 +1,8 @@
 package com.example.catalog.adapters.graphql.resolver;
 
+import com.example.catalog.event.ProductCreatedEvent;
+import com.example.catalog.event.ProductUpdatedEvent;
+import com.example.catalog.event.QualityIssueReportedEvent;
 import com.example.catalog.adapters.graphql.dto.input.AddReviewInput;
 import com.example.catalog.adapters.graphql.dto.input.CreateCategoryInput;
 import com.example.catalog.adapters.graphql.dto.input.CreateProductInput;
@@ -18,6 +21,7 @@ import com.example.catalog.service.CreateCategoryUseCase;
 import com.example.catalog.service.CreateProductUseCase;
 import com.example.catalog.service.ReportQualityIssueUseCase;
 import com.example.catalog.service.UpdateProductUseCase;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.stereotype.Controller;
@@ -30,19 +34,22 @@ public class MutationResolver {
     private final UpdateProductUseCase updateProduct;
     private final AddReviewUseCase addReview;
     private final ReportQualityIssueUseCase reportIssue;
+    private final ApplicationEventPublisher eventPublisher;
 
     public MutationResolver(
             CreateCategoryUseCase createCategory,
             CreateProductUseCase createProduct,
             UpdateProductUseCase updateProduct,
             AddReviewUseCase addReview,
-            ReportQualityIssueUseCase reportIssue
+            ReportQualityIssueUseCase reportIssue,
+            ApplicationEventPublisher eventPublisher
     ) {
         this.createCategory = createCategory;
         this.createProduct = createProduct;
         this.updateProduct = updateProduct;
         this.addReview = addReview;
         this.reportIssue = reportIssue;
+        this.eventPublisher = eventPublisher;
     }
 
     @MutationMapping
@@ -62,6 +69,7 @@ public class MutationResolver {
 
         System.out.println("USE CASE RETURNED = " + product);
 
+        eventPublisher.publishEvent(new ProductCreatedEvent(product.id()));
         return ProductMapper.toResponse(product);
     }
 
@@ -74,6 +82,7 @@ public class MutationResolver {
                 input.price(),
                 input.categoryId()
         );
+        eventPublisher.publishEvent(new ProductUpdatedEvent(product.id()));
         return ProductMapper.toResponse(product);
     }
 
@@ -94,6 +103,7 @@ public class MutationResolver {
                 input.type(),
                 input.severity()
         );
+        eventPublisher.publishEvent(new QualityIssueReportedEvent(issue.id(), issue.productId()));
         return QualityIssueMapper.toResponse(issue);
     }
 }

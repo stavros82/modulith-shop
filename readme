@@ -1,0 +1,541 @@
+# Event‑Driven Modular Monolith
+## Catalog • Inventory • Orders
+### Spring Boot • Spring Modulith • REST • GraphQL • Domain Events
+
+---
+
+## 1. Overview
+
+This project implements a **clean, event‑driven modular monolith** consisting of three fully independent business modules:
+
+- **Catalog Module (GraphQL)** — Product information, categories, reviews, quality issues
+- **Inventory Module (REST)** — Stock levels, reservations, quarantines
+- **Orders Module (REST)** — Order lifecycle, payments, shipping, recalls
+
+Each module:
+
+- Has its **own domain model**
+- Has its **own database tables**
+- Has **no direct queries** to other modules
+- Communicates **exclusively through domain events**
+- Maintains **local copies** of the data it needs
+
+This architecture demonstrates **DDD**, **CQRS**, **event‑driven consistency**, and **strict bounded contexts**.
+
+---
+
+## 2. Architecture
+
+### 2.1 Module Structure
+
+
+### 2.2 Communication Model
+
+All communication is **asynchronous** and **event‑driven**:
+
+- Catalog → Inventory (product lifecycle, quality issues)
+- Inventory → Orders (stock reservation results)
+- Orders → Inventory (order lifecycle events)
+
+There are **no synchronous calls** and **no cross‑module queries**.
+
+---
+
+## 3. Business Domains & Responsibilities
+
+---
+
+## 3.1 Catalog Module (GraphQL)
+
+### Purpose
+Manages product information, categories, customer reviews, and quality issue reports.
+
+### Responsibilities
+- Create/update/delete products
+- Manage categories
+- Manage customer reviews (internal only)
+- Manage quality reviews (cross‑module)
+- Expose GraphQL queries for product browsing
+
+### Local Data
+- Products
+- Categories
+- Reviews (customer + quality)
+
+### Events Published
+- `ProductCreatedEvent`
+- `ProductUpdatedEvent`
+- `ProductDiscontinuedEvent`
+- `ProductQualityIssueReportedEvent`
+
+### Events Consumed
+- None
+
+### Business Rules
+- Catalog does **not** know stock
+- Catalog does **not** know orders
+- Customer reviews stay internal
+- Quality issues propagate to Inventory & Orders
+
+---
+
+## 3.2 Inventory Module (REST)
+
+### Purpose
+Manages stock levels, reservations, quarantines, and warehouse operations.
+
+### Responsibilities
+- Maintain stock per product
+- Reserve stock for orders
+- Release stock on cancellation
+- Decrement stock on payment
+- Quarantine stock on quality issues
+- Manage replenishment
+
+### Local Data
+- productId
+- productName
+- productStatus (active/discontinued/unsafe)
+- stockQuantity
+- reservedQuantity
+- quarantineStatus
+
+### Events Published
+- `StockReservedEvent`
+- `StockNotAvailableEvent`
+- `StockReleasedEvent`
+- `StockDecrementedEvent`
+- `StockReplenishedEvent`
+- `StockQuarantinedEvent`
+
+### Events Consumed
+- `ProductCreatedEvent`
+- `ProductUpdatedEvent`
+- `ProductDiscontinuedEvent`
+- `ProductQualityIssueReportedEvent`
+- `OrderCreatedEvent`
+- `OrderCancelledEvent`
+- `OrderPaidEvent`
+
+### Business Rules
+- Inventory never queries Catalog or Orders
+- Inventory maintains its own local product metadata
+- Inventory decides stock availability
+- Quality issues trigger quarantine workflows
+
+---
+
+## 3.3 Orders Module (REST)
+
+### Purpose
+Manages order creation, payment, shipping, cancellation, and recall workflows.
+
+### Responsibilities
+- Create orders
+- Validate order structure
+- Process payments
+- Manage order lifecycle
+- Handle recalls due to quality issues
+
+### Local Data
+- productId
+- productName
+- productPrice
+- stockReservationStatus
+- orderStatus
+- paymentStatus
+- recallStatus
+
+### Events Published
+- `OrderCreatedEvent`
+- `OrderPaidEvent`
+- `OrderCancelledEvent`
+- `OrderShippedEvent`
+- `OrderMarkedForRecallEvent`
+
+### Events Consumed
+- `StockReservedEvent`
+- `StockNotAvailableEvent`
+- `StockReleasedEvent`
+- `StockDecrementedEvent`
+- `ProductQualityIssueReportedEvent`
+
+### Business Rules
+- Orders never query Inventory or Catalog
+- Orders rely entirely on events for stock & quality info
+- Orders cancel automatically if stock is unavailable
+- Critical quality issues trigger recall workflows
+
+---
+
+## 4. Event‑Driven Business Flows
+
+### 4.1 Product Lifecycle (Catalog → Inventory)
+1. Catalog publishes `ProductCreatedEvent`
+2. Inventory creates stock entry
+
+---
+
+### 4.2 Order Creation (Orders → Inventory → Orders)
+1. Orders publishes `OrderCreatedEvent`
+2. Inventory attempts stock reservation
+3. Inventory publishes:
+   - `StockReservedEvent` → Order continues
+   - `StockNotAvailableEvent` → Order cancels
+
+---
+
+### 4.3 Payment (Orders → Inventory → Orders)
+1. Orders publishes `OrderPaidEvent`
+2. Inventory decrements stock
+3. Inventory publishes `StockDecrementedEvent`
+
+---
+
+### 4.4 Quality Issue (Catalog → Inventory + Orders)
+1. Catalog publishes `ProductQualityIssueReportedEvent`
+2. Inventory quarantines stock
+3. Orders mark affected orders as recall‑risk
+
+---
+
+## 5. Non‑Functional Requirements
+
+### Modularity
+- Strict bounded contexts
+- No cross‑module queries
+- Event‑driven communication only
+
+### Scalability
+- Each module can scale independently
+- Event bus decouples modules
+
+### Maintainability
+- Clear separation of concerns
+- Independent domain logic
+- No shared database tables
+
+### Reliability
+- Eventual consistency
+- Retry mechanisms for event handlers
+
+---
+
+## 6. Technology Stack
+
+- **Backend:** Spring Boot, Spring Modulith
+- **APIs:** REST (Orders, Inventory), GraphQL (Catalog)
+- **Communication:** Domain Events
+- **Database:** Independent schemas per module
+- **Frontend (optional):** Angular / React
+
+---
+
+## 7. Summary
+
+This system demonstrates:
+
+- Clean modular architecture
+- Event‑driven communication
+- Independent business domains
+- No cross‑module queries
+- Realistic enterprise workflows
+- High scalability and maintainability
+
+It is ideal for demonstrating **DDD**, **CQRS**, **Spring Modulith**, and **event‑driven design**.
+
+---
+📄 COPY‑READY BRD (PDF‑STYLE)
+Paste this directly into Word
+EVENT‑DRIVEN MODULAR MONOLITH — BRD
+Business Requirements Document
+Catalog • Inventory • Orders
+Version 1.0
+Prepared for: Stavros
+Date: 15 May 2026
+
+TABLE OF CONTENTS
+
+Executive Summary
+
+Scope
+
+Personas
+
+High‑Level Architecture
+
+Module Business Rules
+ 5.1 Catalog
+ 5.2 Inventory
+ 5.3 Orders
+
+Cross‑Module Rules
+
+Domain Events
+
+Validation Pipeline (Chain of Responsibility)
+ 8.1 Customer Validation
+ 8.2 Stock Reservation Validation
+ 8.3 Payment Method Validation
+ 8.4 Fraud Validation
+ 8.5 Recall‑Risk Validation
+ 8.6 Business Rules Validation
+
+Pricing Engine (Strategy Pattern)
+ 9.1 Standard Pricing
+ 9.2 VIP Pricing
+ 9.3 B2B Pricing
+ 9.4 Campaign Pricing
+ 9.5 Black Friday Pricing
+ 9.6 Strategy Selection
+
+UI Requirements
+
+UX Rules
+
+Non‑Functional Requirements
+
+Glossary
+
+1. EXECUTIVE SUMMARY
+
+This Business Requirements Document (BRD) defines the complete business logic, domain rules, validation flows, pricing algorithms, event interactions, and UI requirements for an event‑driven modular monolith consisting of:
+
+• Catalog Module (React + GraphQL)
+• Inventory Module (Angular + REST)
+• Orders Module (Angular + REST)
+
+The system is designed for high modularity, event‑driven communication, domain isolation, and enterprise scalability.
+
+2. SCOPE
+
+This BRD covers:
+
+• Business rules per module
+• Cross‑module interactions
+• Domain events
+• Validation pipeline (Chain of Responsibility)
+• Pricing engine (Strategy Pattern)
+• UI/UX requirements
+• Non‑functional requirements
+
+3. PERSONAS
+
+3.1 Customer
+Interacts with product catalog, places orders, submits reviews.
+
+3.2 Inventory Manager
+Manages stock, quarantines, replenishments.
+
+3.3 Catalog Manager
+Creates products, updates metadata, handles quality issues.
+
+3.4 Order Manager
+Oversees order lifecycle, payments, shipping.
+
+4. HIGH‑LEVEL ARCHITECTURE
+
+Frontend Layer
+• Catalog UI (React)
+• Inventory UI (Angular)
+• Orders UI (Angular)
+
+Backend Layer
+• Catalog Module
+• Inventory Module
+• Orders Module
+
+Communication
+• Asynchronous domain events
+• No cross‑module queries
+
+5. MODULE BUSINESS RULES
+
+5.1 Catalog Module
+• Owns product metadata
+• Products cannot be deleted, only discontinued
+• Quality issues trigger events
+• CRITICAL issues mark product unsafe
+• Reviews do not trigger events
+• Updates propagate to Inventory
+
+5.2 Inventory Module
+• Owns stock levels
+• Reservations are event‑driven
+• Unsafe products cannot be reserved
+• Quarantines triggered by quality issues
+• Payment decrements stock
+• Reservation is atomic
+
+5.3 Orders Module
+• Owns order lifecycle
+• Order creation triggers reservation
+• Payment allowed only if stock reserved
+• Shipping allowed only if not recall‑risk
+• Auto‑cancel if stock unavailable
+
+6. CROSS‑MODULE RULES
+
+Product Lifecycle
+• Catalog → Inventory sync
+• Discontinued → inactive in Inventory
+
+Stock Reservation
+• Orders → Inventory
+• Inventory → reserved/not available
+
+Quality Issues
+• Catalog → Inventory quarantine
+• Catalog → Orders recall‑risk
+
+Payment
+• Orders → Inventory stock decrement
+
+7. DOMAIN EVENTS
+
+Catalog
+• ProductCreated
+• ProductUpdated
+• ProductDiscontinued
+• ProductQualityIssueReported
+
+Inventory
+• StockReserved
+• StockNotAvailable
+• StockReleased
+• StockDecremented
+• StockReplenished
+• StockQuarantined
+
+Orders
+• OrderCreated
+• OrderPaid
+• OrderCancelled
+• OrderShipped
+• OrderMarkedForRecall
+
+8. VALIDATION PIPELINE (CHAIN OF RESPONSIBILITY)
+
+8.1 Customer Validation
+• Customer exists
+• Active status
+• Not blacklisted
+• Valid billing info
+• B2B VAT valid
+• Credit limit sufficient
+
+8.2 Stock Reservation Validation
+• requested ≤ available
+• Unsafe/discontinued → fail
+• Auto‑cancel on failure
+
+8.3 Payment Method Validation
+• Card valid
+• PayPal verified
+• COD only B2C
+• Invoice only B2B
+
+8.4 Fraud Validation
+• High‑risk country
+• Failed payments
+• High amount
+• IP mismatch
+
+8.5 Recall‑Risk Validation
+• Active quality issues → recall‑risk
+• CRITICAL → block shipping
+• Quarantined → block payment
+
+8.6 Business Rules Validation
+• Max 50 items
+• Max 30kg
+• No alcohol weekends
+• No electronics to PO boxes
+• No COD > €500
+
+9. PRICING ENGINE (STRATEGY PATTERN)
+
+9.1 Standard Pricing
+• Base price
+• Tax
+• Shipping
+• Bulk discount
+
+9.2 VIP Pricing
+• 10–20% discount
+• Free shipping
+• Priority handling
+• No stacking
+
+9.3 B2B Pricing
+• Wholesale price
+• No VAT intra‑EU
+• Invoice fee
+• Contract shipping
+
+9.4 Campaign Pricing
+• Campaign discount
+• Product discount
+• Loyalty discount
+• Supports B2G1, 50% second item, free shipping
+
+9.5 Black Friday Pricing
+• 30–70% discount
+• Free shipping
+• No returns
+• No stacking
+
+9.6 Strategy Selection
+
+Black Friday
+
+Campaign
+
+VIP
+
+B2B
+
+Standard
+
+10. UI REQUIREMENTS
+
+Catalog UI (React)
+• Product list
+• Product details
+• Create product
+• Report quality issue
+
+Inventory UI (Angular)
+• Stock dashboard
+• Stock details
+• Reservation monitor
+
+Orders UI (Angular)
+• Order list
+• Order details
+• Create order
+
+11. UX RULES
+
+• Event‑driven UI updates
+• Local product copies
+• Consistent badges
+• Quality issues override flows
+
+12. NON‑FUNCTIONAL REQUIREMENTS
+
+• No cross‑module queries
+• Event‑driven communication
+• Independent scaling
+• Maintainability
+• Eventual consistency
+• Retry mechanisms
+
+13. GLOSSARY
+
+Recall‑risk
+Quarantine
+Reservation
+Strategy
+CoR
+

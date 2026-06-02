@@ -309,7 +309,7 @@
       "name": "Inventory Adapters",
       "item": [
         {
-          "name": "Note: Inventory adapters endpoints to be documented",
+          "name": "Get Inventory Product",
           "request": {
             "method": "GET",
             "header": [],
@@ -318,14 +318,52 @@
               "raw": ""
             },
             "url": {
-              "raw": "http://localhost:8080",
+              "raw": "http://localhost:8080/inventory/products/{{productId}}",
               "protocol": "http",
               "host": [
                 "localhost"
               ],
-              "port": "8080"
+              "port": "8080",
+              "path": [
+                "inventory",
+                "products",
+                "{{productId}}"
+              ]
             },
-            "description": "Inventory adapter endpoints are not yet configured. Please configure REST or GraphQL endpoints in inventory-adapters module."
+            "description": "Read local inventory state for a product (stock/reserved/quarantined/available)"
+          },
+          "response": []
+        },
+        {
+          "name": "Replenish Stock (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://localhost:8080/inventory/products/{{productId}}/replenish?quantity=100",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "inventory",
+                "products",
+                "{{productId}}",
+                "replenish"
+              ],
+              "query": [
+                {
+                  "key": "quantity",
+                  "value": "100"
+                }
+              ]
+            },
+            "description": "Increase stock for a product so the UI can see available quantities"
           },
           "response": []
         }

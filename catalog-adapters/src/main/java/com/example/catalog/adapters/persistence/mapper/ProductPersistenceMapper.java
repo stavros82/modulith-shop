@@ -5,9 +5,14 @@ package com.example.catalog.adapters.persistence.mapper;
 import com.example.catalog.adapters.persistence.entity.ProductJpaEntity;
 import com.example.catalog.model.Product;
 
-import java.util.stream.Collectors;
+
 
 public class ProductPersistenceMapper {
+
+    private ProductPersistenceMapper() {
+        /* This utility class should not be instantiated */
+    }
+
 
     public static Product toDomain(ProductJpaEntity e) {
         if (e == null) return null;

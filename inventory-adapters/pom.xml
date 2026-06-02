@@ -19,12 +19,44 @@
         <dependency>
             <groupId>com.example</groupId>
             <artifactId>inventory-domain</artifactId>
-
         </dependency>
 
+        <!-- Catalog events (Catalog -> Inventory) -->
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>catalog-domain</artifactId>
+        </dependency>
 
+        <!-- Orders events (Orders -> Inventory) -->
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>orders-domain</artifactId>
+        </dependency>
 
+        <!-- REST API -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
 
+        <!-- Persistence (local Inventory DB) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- Optional: Modulith integration -->
+        <dependency>
+            <groupId>org.springframework.modulith</groupId>
+            <artifactId>spring-modulith-starter-core</artifactId>
+        </dependency>
+
+        <!-- H2 runtime -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 
     </dependencies>
 

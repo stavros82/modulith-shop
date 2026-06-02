@@ -60,6 +60,18 @@ You should see the GraphiQL interface.
 - **Add Review** - `POST /graphql` - Add product review
 - **Report Quality Issue** - `POST /graphql` - Report quality issues
 
+### Inventory Adapters (REST)
+
+- **Inventory Flow.postman_collection.json**: End-to-end flow that shows Catalog → Inventory event-driven sync (create product, replenish stock, report quality issue, verify quarantine)
+- **Get Inventory Product** - `GET /inventory/products/{productId}` - Read local inventory state
+- **Replenish Stock (Admin)** - `POST /inventory/products/{productId}/replenish?quantity=100` - Increase stock for demos
+
+### Orders Adapters (REST)
+
+- **Orders Flow.postman_collection.json**: End-to-end flow that shows Orders → Inventory → Orders stock reservation (create product, replenish stock, create order, verify reservation status)
+- **Create Order** - `POST /orders` - Create an order (publishes `OrderCreatedEvent`)
+- **Get Order** - `GET /orders/{orderId}` - Read local order state (should become `RESERVED` or `NOT_AVAILABLE`)
+
 ## Testing
 
 Each request in the Postman collection includes:
