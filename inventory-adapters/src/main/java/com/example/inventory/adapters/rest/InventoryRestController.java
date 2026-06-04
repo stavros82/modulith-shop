@@ -7,8 +7,8 @@ import com.example.inventory.service.GetInventoryProductUseCase;
 import com.example.inventory.service.ReplenishStockUseCase;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.math.BigDecimal;
+import static com.example.inventory.adapters.rest.mapper.InventoryMapper.toResponse;
 
 @RestController
 @RequestMapping("/inventory")
@@ -40,22 +40,6 @@ public class InventoryRestController {
         return ResponseEntity.ok(toResponse(product));
     }
 
-    private static InventoryProductResponse toResponse(InventoryProduct p) {
-        if (p == null) {
-            return new InventoryProductResponse(null, null, null, null, null, null);
-        }
 
-        BigDecimal available = p.availableQuantity();
-        ProductSafetyStatus status = p.safetyStatus();
-
-        return new InventoryProductResponse(
-                p.productId(),
-                status != null ? status.name() : null,
-                p.stockQuantity(),
-                p.reservedQuantity(),
-                p.quarantinedQuantity(),
-                available
-        );
-    }
 }
 

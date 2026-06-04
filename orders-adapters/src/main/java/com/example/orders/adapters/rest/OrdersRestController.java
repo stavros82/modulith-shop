@@ -9,6 +9,7 @@ import com.example.orders.service.GetOrderUseCase;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import static com.example.orders.adapters.rest.mapper.OrderMapper.toResponse;
 
 @RestController
 @RequestMapping("/orders")
@@ -16,7 +17,6 @@ public class OrdersRestController {
 
     private final CreateOrderUseCase createOrderUseCase;
     private final GetOrderUseCase getOrderUseCase;
-    private final ApplicationEventPublisher eventPublisher;
 
     public OrdersRestController(
             CreateOrderUseCase createOrderUseCase,
@@ -25,13 +25,12 @@ public class OrdersRestController {
     ) {
         this.createOrderUseCase = createOrderUseCase;
         this.getOrderUseCase = getOrderUseCase;
-        this.eventPublisher = eventPublisher;
+
     }
 
     @PostMapping
     public ResponseEntity<OrderResponse> create(@RequestBody CreateOrderRequest request) {
         Order order = createOrderUseCase.execute(request.productId(), request.quantity());
-        eventPublisher.publishEvent(new OrderCreatedEvent(order.id(), order.productId(), order.quantity()));
         return ResponseEntity.ok(toResponse(order));
     }
 
@@ -40,14 +39,6 @@ public class OrdersRestController {
         return ResponseEntity.ok(toResponse(getOrderUseCase.execute(orderId)));
     }
 
-    private static OrderResponse toResponse(Order order) {
-        return new OrderResponse(
-                order.id(),
-                order.productId(),
-                order.quantity(),
-                order.status().name(),
-                order.reservationStatus().name()
-        );
-    }
+
 }
 
