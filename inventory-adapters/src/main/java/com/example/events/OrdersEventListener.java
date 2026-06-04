@@ -1,8 +1,9 @@
-package com.example.inventory.adapters.events;
+package com.example.events;
 
 import com.example.inventory.event.StockNotAvailableEvent;
 import com.example.inventory.event.StockReservedEvent;
 import com.example.inventory.service.ReserveStockForOrderUseCase;
+
 import com.example.orders.event.OrderCreatedEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;

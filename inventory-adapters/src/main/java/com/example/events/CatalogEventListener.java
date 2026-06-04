@@ -1,4 +1,4 @@
-package com.example.inventory.adapters.events;
+package com.example.events;
 
 import com.example.catalog.event.ProductCreatedEvent;
 import com.example.catalog.event.ProductUpdatedEvent;
