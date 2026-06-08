@@ -6,6 +6,10 @@ public record OrderResponse(
         String id,
         String productId,
         BigDecimal quantity,
+        String shippingAddress,
+        String paymentMethod,
+        BigDecimal weight,
+        BigDecimal orderTotal,
         String status,
         String reservationStatus
 ) {}

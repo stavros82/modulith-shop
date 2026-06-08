@@ -205,6 +205,63 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "7. Create Customer",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const id = pm.response.json().id;",
+              "pm.environment.set('customerId', id);",
+              "pm.test('Customer created', function () { pm.expect(id).to.not.be.undefined; });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"name\": \"InventoryFlow Customer\", \"email\": \"inventoryflow@example.com\", \"phone\": \"+10000000002\" }"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/customers",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "customers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "8. Get Customer",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/customers/{{customerId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "customers",
+            "{{customerId}}"
+          ]
+        }
+      },
+      "response": []
     }
   ],
   "variable": [

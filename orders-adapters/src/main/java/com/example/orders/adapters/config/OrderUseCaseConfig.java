@@ -1,20 +1,31 @@
 package com.example.orders.adapters.config;
 
 import com.example.orders.event.OrderEventPublisher;
+import com.example.orders.repository.CustomerRepository;
 import com.example.orders.repository.OrderRepository;
-import com.example.orders.service.CreateOrderUseCase;
-import com.example.orders.service.GetOrderUseCase;
-import com.example.orders.service.MarkOrderNotAvailableUseCase;
-import com.example.orders.service.MarkOrderReservedUseCase;
+import com.example.orders.service.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import jakarta.validation.Validation;
+import jakarta.validation.ValidatorFactory;
+import jakarta.validation.Validator;
 
 @Configuration
 public class OrderUseCaseConfig {
 
     @Bean
-    CreateOrderUseCase createOrderUseCase(OrderRepository repository, OrderEventPublisher eventPublisher) {
-        return new CreateOrderUseCase(repository,eventPublisher);
+    public ValidatorFactory validatorFactory() {
+        return Validation.buildDefaultValidatorFactory();
+    }
+
+    @Bean
+    public Validator validator(ValidatorFactory validatorFactory) {
+        return validatorFactory.getValidator();
+    }
+
+    @Bean
+    CreateOrderUseCase createOrderUseCase(OrderRepository repository, OrderEventPublisher eventPublisher, Validator validator) {
+        return new CreateOrderUseCase(repository, eventPublisher, validator);
     }
 
     @Bean
@@ -30,6 +41,16 @@ public class OrderUseCaseConfig {
     @Bean
     MarkOrderNotAvailableUseCase markOrderNotAvailableUseCase(OrderRepository repository) {
         return new MarkOrderNotAvailableUseCase(repository);
+    }
+
+    @Bean
+    CreateCustomerUseCase createCustomerUseCase(CustomerRepository repository) {
+        return new CreateCustomerUseCase(repository);
+    }
+
+    @Bean
+    GetCustomerUseCase getCustomerUseCase(CustomerRepository repository) {
+        return new GetCustomerUseCase(repository);
     }
 }
 

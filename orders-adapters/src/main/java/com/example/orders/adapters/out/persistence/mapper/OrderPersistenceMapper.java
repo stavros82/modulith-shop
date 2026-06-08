@@ -14,7 +14,15 @@ public class OrderPersistenceMapper {
             return null;
         }
 
-        Order order = new Order(e.getId(), e.getProductId(), e.getQuantity());
+        Order order = new Order(
+            e.getId(), 
+            e.getProductId(), 
+            e.getQuantity(),
+            e.getShippingAddress(),
+            e.getPaymentMethod(),
+            e.getWeight(),
+            e.getOrderTotal()
+        );
 
         if (e.getReservationStatus() != null) {
             // restore status by calling methods (we keep Order fairly simple)
@@ -42,6 +50,10 @@ public class OrderPersistenceMapper {
         e.setId(o.id());
         e.setProductId(o.productId());
         e.setQuantity(o.quantity());
+        e.setShippingAddress(o.shippingAddress());
+        e.setPaymentMethod(o.paymentMethod());
+        e.setWeight(o.weight());
+        e.setOrderTotal(o.orderTotal());
         e.setStatus(o.status().name());
         e.setReservationStatus(o.reservationStatus().name());
         return e;

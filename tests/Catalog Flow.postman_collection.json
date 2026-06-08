@@ -286,6 +286,63 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "8. Create Customer",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "let id = pm.response.json().id;",
+              "pm.environment.set('customerId', id);",
+              "pm.test('Customer created', function () { pm.expect(id).to.not.be.undefined; });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"name\": \"CatalogFlow Customer\", \"email\": \"catalogflow@example.com\", \"phone\": \"+10000000001\" }"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/customers",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "customers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "9. Get Customer",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/customers/{{customerId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "customers",
+            "{{customerId}}"
+          ]
+        }
+      },
+      "response": []
     }
   ],
   "variable": [

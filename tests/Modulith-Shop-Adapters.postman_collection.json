@@ -373,7 +373,181 @@
       "name": "Orders Adapters",
       "item": [
         {
-          "name": "Note: Orders adapters endpoints to be documented",
+          "name": "Create Order - Valid",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"productId\":\"product-123\",\"quantity\":10,\"shippingAddress\":\"123 Main Street\",\"paymentMethod\":\"CARD\",\"weight\":\"15.0\",\"orderTotal\":\"500.00\"}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/orders",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "orders"
+              ]
+            },
+            "description": "Create a valid order (all business rules pass)"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Order - Fail: Max Items",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"productId\":\"product-123\",\"quantity\":100,\"shippingAddress\":\"123 Main Street\",\"paymentMethod\":\"CARD\",\"weight\":\"25.0\",\"orderTotal\":\"1000.00\"}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/orders",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "orders"
+              ]
+            },
+            "description": "Fails: Quantity exceeds 50 items"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Order - Fail: Max Weight",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"productId\":\"product-456\",\"quantity\":5,\"shippingAddress\":\"123 Main Street\",\"paymentMethod\":\"CARD\",\"weight\":\"35.5\",\"orderTotal\":\"500.00\"}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/orders",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "orders"
+              ]
+            },
+            "description": "Fails: Weight exceeds 30 kg"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Order - Fail: Alcohol Weekends",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"productId\":\"wine-cabernet\",\"quantity\":2,\"shippingAddress\":\"123 Main Street\",\"paymentMethod\":\"CARD\",\"weight\":\"4.0\",\"orderTotal\":\"50.00\"}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/orders",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "orders"
+              ]
+            },
+            "description": "Fails on weekends: Alcohol cannot be ordered Saturday or Sunday"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Order - Fail: Electronics to PO Box",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"productId\":\"laptop-dell\",\"quantity\":1,\"shippingAddress\":\"P.O. Box 123, New York, NY\",\"paymentMethod\":\"CARD\",\"weight\":\"2.0\",\"orderTotal\":\"1200.00\"}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/orders",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "orders"
+              ]
+            },
+            "description": "Fails: Electronics cannot ship to PO box"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Order - Fail: COD Above €500",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"productId\":\"product-789\",\"quantity\":10,\"shippingAddress\":\"123 Main Street\",\"paymentMethod\":\"COD\",\"weight\":\"15.0\",\"orderTotal\":\"750.00\"}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/orders",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "orders"
+              ]
+            },
+            "description": "Fails: COD (Cash on Delivery) not allowed for orders over €500"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Order",
           "request": {
             "method": "GET",
             "header": [],
@@ -382,14 +556,72 @@
               "raw": ""
             },
             "url": {
-              "raw": "http://localhost:8080",
+              "raw": "http://localhost:8080/orders/:orderId",
               "protocol": "http",
               "host": [
                 "localhost"
               ],
-              "port": "8080"
+              "port": "8080",
+              "path": [
+                "orders",
+                ":orderId"
+              ]
             },
-            "description": "Orders adapter endpoints are not yet configured. Please configure REST or GraphQL endpoints in orders-adapters module."
+            "description": "Get order by id (GET /orders/{orderId})"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Alice\",\"email\":\"alice@example.com\",\"phone\":\"+1234567890\"}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/customers",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "customers"
+              ]
+            },
+            "description": "Create a customer (POST /customers)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Customer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://localhost:8080/customers/:customerId",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "customers",
+                ":customerId"
+              ]
+            },
+            "description": "Get customer by id (GET /customers/{customerId})"
           },
           "response": []
         }

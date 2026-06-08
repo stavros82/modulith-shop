@@ -1,0 +1,468 @@
+{
+  "info": {
+    "_postman_id": "5db94664-7ddf-41b6-a90c-c33f82150f2c",
+    "name": "Orders Flow",
+    "description": "End-to-end Orders → Inventory → Orders flow: create category → create product → replenish stock → create order → verify reservation status",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Create Category (Catalog / GraphQL)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const id = pm.response.json().data.createCategory.id;",
+              "pm.environment.set('categoryId', id);",
+              "pm.test('Category created', function () { pm.expect(id).to.not.be.undefined; });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"query\":\"mutation CreateCategory($input: CreateCategoryInput!) { createCategory(input: $input) { id name } }\",\"variables\":{\"input\":{\"name\":\"Electronics\",\"parentId\":null}}}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/graphql",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "2. Create Product (Catalog / GraphQL)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const id = pm.response.json().data.createProduct.id;",
+              "pm.environment.set('productId', id);",
+              "pm.test('Product created', function () { pm.expect(id).to.not.be.undefined; });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"query\":\"mutation CreateProduct($input: CreateProductInput!) { createProduct(input: $input) { id name } }\",\"variables\":{\"input\":{\"name\":\"Orders Flow Product\",\"description\":\"Created by Orders Flow\",\"price\":49.99,\"categoryId\":\"{{categoryId}}\"}}}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/graphql",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "3. Replenish Stock (Inventory / REST)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/inventory/products/{{productId}}/replenish?quantity=10",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "inventory",
+            "products",
+            "{{productId}}",
+            "replenish"
+          ],
+          "query": [
+            {
+              "key": "quantity",
+              "value": "10"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "4a. Create Customer (Orders Flow)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const id = pm.response.json().id || pm.response.json().id;",
+              "pm.environment.set('customerId', id);",
+              "pm.test('Customer created', function () { pm.expect(id).to.not.be.undefined; });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"name\": \"OrdersFlow Customer\", \"email\": \"ordersflow@example.com\", \"phone\": \"+10000000000\" }"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/customers",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "customers"
+          ]
+        },
+        "description": "Create a customer used by the Orders flow"
+      },
+      "response": []
+    },
+    {
+      "name": "4. Create Order (Orders / REST)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const id = pm.response.json().id;",
+              "pm.environment.set('orderId', id);",
+              "pm.test('Order created', function () { pm.expect(id).to.not.be.undefined; });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 2, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 5.5, \"orderTotal\": 99.98 }"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/orders",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "orders"
+          ]
+        },
+        "description": "Creates an order and publishes OrderCreatedEvent. Inventory should reserve stock and Orders should update reservationStatus via events."
+      },
+      "response": []
+    },
+    {
+      "name": "5. Get Order (expect RESERVED)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Reservation status updated', function () {",
+              "  const body = pm.response.json();",
+              "  pm.expect(body.id).to.eql(pm.environment.get('orderId'));",
+              "  pm.expect(['RESERVED','PENDING']).to.include(body.reservationStatus);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/orders/{{orderId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "orders",
+            "{{orderId}}"
+          ]
+        }
+      },
+      "response": []
+     },
+     {
+       "name": "6. Get Customer",
+       "request": {
+         "method": "GET",
+         "header": [],
+         "url": {
+           "raw": "{{baseUrl}}/customers/{{customerId}}",
+           "host": [
+             "{{baseUrl}}"
+           ],
+           "path": [
+             "customers",
+             "{{customerId}}"
+           ]
+         }
+       },
+       "response": []
+     },
+     {
+       "name": "FAILURE FLOW - Business Rules Validation",
+       "description": "Test scenarios that violate business rules",
+       "item": [
+        {
+          "name": "F1. Fail - Max Items Exceeded (60 items)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Validation error: Max items', function () {",
+                  "  pm.expect(pm.response.code).to.equal(400);",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.message || pm.response.text()).to.include('cannot exceed');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 60, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 5.5, \"orderTotal\": 99.98 }"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/orders",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            },
+            "description": "Create order with quantity > 50 (should fail: Max 50 items rule)"
+          },
+          "response": []
+        },
+        {
+          "name": "F2. Fail - Max Weight Exceeded (40 kg)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Validation error: Max weight', function () {",
+                  "  pm.expect(pm.response.code).to.equal(400);",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.message || pm.response.text()).to.include('exceed');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 2, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 40, \"orderTotal\": 99.98 }"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/orders",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            },
+            "description": "Create order with weight > 30kg (should fail: Max 30kg weight rule)"
+          },
+          "response": []
+        },
+        {
+          "name": "F3. Fail - Electronics to PO Box",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Validation error: Electronics to PO box', function () {",
+                  "  pm.expect(pm.response.code).to.equal(400);",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.message || pm.response.text()).to.include('cannot be shipped to PO box');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"productId\": \"laptop-001\", \"quantity\": 1, \"shippingAddress\": \"P.O. Box 123\", \"paymentMethod\": \"CARD\", \"weight\": 5.5, \"orderTotal\": 1299.99 }"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/orders",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            },
+            "description": "Create electronics order to PO box (should fail: No electronics to PO boxes rule)"
+          },
+          "response": []
+        },
+        {
+          "name": "F4. Fail - COD Above €500",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Validation error: COD above threshold', function () {",
+                  "  pm.expect(pm.response.code).to.equal(400);",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.message || pm.response.text()).to.include('not allowed for orders exceeding');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 15, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"COD\", \"weight\": 15.5, \"orderTotal\": 750.00 }"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/orders",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            },
+            "description": "Create order with COD payment > €500 (should fail: No COD above €500 rule)"
+          },
+          "response": []
+        },
+        {
+          "name": "F5. Fail - Missing Required Fields",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Validation error: Missing fields', function () {",
+                  "  pm.expect(pm.response.code).to.equal(400);",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.message || pm.response.text()).to.include.one.of(['cannot be blank', 'cannot be null']);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"productId\": \"\", \"quantity\": 2, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"\", \"weight\": 5.5, \"orderTotal\": 99.98 }"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/orders",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            },
+            "description": "Create order with empty productId and paymentMethod (should fail: Required field validation)"
+          },
+          "response": []
+        }
+       ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ]
+}
+

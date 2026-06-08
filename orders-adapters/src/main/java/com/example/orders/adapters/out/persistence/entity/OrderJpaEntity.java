@@ -15,6 +15,10 @@ public class OrderJpaEntity {
 
     private String productId;
     private BigDecimal quantity;
+    private String shippingAddress;
+    private String paymentMethod;
+    private BigDecimal weight;
+    private BigDecimal orderTotal;
 
     private String status;
     private String reservationStatus;
@@ -41,6 +45,38 @@ public class OrderJpaEntity {
 
     public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
+    }
+
+    public String getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(String shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public BigDecimal getWeight() {
+        return weight;
+    }
+
+    public void setWeight(BigDecimal weight) {
+        this.weight = weight;
+    }
+
+    public BigDecimal getOrderTotal() {
+        return orderTotal;
+    }
+
+    public void setOrderTotal(BigDecimal orderTotal) {
+        this.orderTotal = orderTotal;
     }
 
     public String getStatus() {

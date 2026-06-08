@@ -273,7 +273,7 @@ Cross‑Module Rules
 
 Domain Events
 
-Validation Pipeline (Chain of Responsibility)
+Validation Pipeline
  8.1 Customer Validation
  8.2 Stock Reservation Validation
  8.3 Payment Method Validation
@@ -414,11 +414,11 @@ Orders
 • OrderShipped
 • OrderMarkedForRecall
 
-8. VALIDATION PIPELINE (CHAIN OF RESPONSIBILITY)
+8. VALIDATION PIPELINE
 
 8.1 Customer Validation
 • Customer exists
-• Active status
+
 • Not blacklisted
 • Valid billing info
 • B2B VAT valid

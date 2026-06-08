@@ -13,6 +13,10 @@ public class OrderMapper {
                 order.id(),
                 order.productId(),
                 order.quantity(),
+                order.shippingAddress(),
+                order.paymentMethod(),
+                order.weight(),
+                order.orderTotal(),
                 order.status().name(),
                 order.reservationStatus().name()
         );
