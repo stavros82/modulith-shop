@@ -29,12 +29,7 @@ public class CreateOrderUseCase {
 
     public Order execute(String productId, BigDecimal quantity, String shippingAddress,
                          String paymentMethod, BigDecimal weight, BigDecimal orderTotal) {
-        if (productId == null || productId.isBlank()) {
-            throw new BusinessValidationException("productId is required", List.of("productId is required"));
-        }
-        if (quantity == null || quantity.signum() <= 0) {
-            throw new BusinessValidationException("quantity must be > 0", List.of("quantity must be > 0"));
-        }
+
 
         Order order = new Order(UUID.randomUUID().toString(), productId, quantity,
                                 shippingAddress, paymentMethod, weight, orderTotal);
