@@ -7,6 +7,9 @@ import com.example.orders.repository.OrderRepository;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+import com.example.orders.exception.BusinessValidationException;
+import java.util.List;
+import java.util.ArrayList;
 import java.math.BigDecimal;
 import java.util.Set;
 import java.util.UUID;
@@ -27,10 +30,10 @@ public class CreateOrderUseCase {
     public Order execute(String productId, BigDecimal quantity, String shippingAddress,
                          String paymentMethod, BigDecimal weight, BigDecimal orderTotal) {
         if (productId == null || productId.isBlank()) {
-            throw new IllegalArgumentException("productId is required");
+            throw new BusinessValidationException("productId is required", List.of("productId is required"));
         }
         if (quantity == null || quantity.signum() <= 0) {
-            throw new IllegalArgumentException("quantity must be > 0");
+            throw new BusinessValidationException("quantity must be > 0", List.of("quantity must be > 0"));
         }
 
         Order order = new Order(UUID.randomUUID().toString(), productId, quantity,
@@ -39,10 +42,10 @@ public class CreateOrderUseCase {
         // Validate Order domain model against business rules
         Set<ConstraintViolation<Order>> violations = validator.validate(order);
         if (!violations.isEmpty()) {
-            String violationMessages = violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(", "));
-            throw new IllegalArgumentException("Order validation failed: " + violationMessages);
+            List<String> msgs = new ArrayList<>();
+            violations.forEach(v -> msgs.add(v.getMessage()));
+            String violationMessages = String.join(", ", msgs);
+            throw new BusinessValidationException("Order validation failed: " + violationMessages, msgs);
         }
 
         repository.save(order);

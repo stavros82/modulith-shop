@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import static com.example.orders.adapters.in.rest.mapper.OrderMapper.toResponse;
+import com.example.orders.exception.BusinessValidationException;
 
 @RestController
 @RequestMapping("/orders")
@@ -76,6 +77,16 @@ public class OrdersRestController {
         body.put("error", "Bad Request");
         body.put("message", e.getMessage());
         body.put("errors", new String[]{e.getMessage()});
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+    @ExceptionHandler(BusinessValidationException.class)
+    public ResponseEntity<Map<String, Object>> handleBusinessValidation(BusinessValidationException e) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("error", "Bad Request");
+        body.put("message", e.getMessage());
+        body.put("errors", e.getErrors());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 

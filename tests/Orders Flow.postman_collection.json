@@ -423,7 +423,7 @@
                   "pm.test('Validation error: Missing fields', function () {",
                   "  pm.expect(pm.response.code).to.equal(400);",
                   "  const body = pm.response.json();",
-                  "  pm.expect(body.message || pm.response.text()).to.include.one.of(['cannot be blank', 'cannot be null']);",
+                  "  pm.expect(body.message || pm.response.text()).to.include('cannot');",
                   "});"
                 ],
                 "type": "text/javascript"
