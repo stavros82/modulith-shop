@@ -11,7 +11,7 @@ This project is organized as a multi-module Maven build with separate domain and
 | Module | Purpose |
 |---|---|
 | `catalog-domain` | Core catalog business logic and domain model. |
-| `catalog-adapters` | Catalog-facing adapters such as REST, persistence, or integration components. |
+| `catalog-adapters` | Catalog-facing adapters such as GraphSql, persistence, or integration components. |
 | `inventory-domain` | Inventory business rules and domain model. |
 | `inventory-adapters` | Inventory adapters and infrastructure integrations. |
 | `orders-domain` | Order management business logic and domain model. |
