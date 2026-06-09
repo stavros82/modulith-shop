@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# gemini-cli settings
+.gemini/
+
