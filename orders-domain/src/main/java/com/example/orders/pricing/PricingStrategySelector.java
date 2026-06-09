@@ -1,7 +1,5 @@
 package com.example.orders.pricing;
 
-import java.util.List;
-
 /**
  * A selector strategy that picks the most appropriate strategy based on the context.
  */
@@ -22,7 +20,7 @@ public class PricingStrategySelector implements PricingStrategy {
         if (context == null) {
             throw new IllegalArgumentException("PricingContext cannot be null");
         }
-        if (context.getCustomerType() == PricingContext.CustomerType.B2B) {
+        if (context.customerType() == PricingContext.CustomerType.B2B) {
             return b2bStrategy.calculate(context);
         } else if (context.isVipCustomer()) {
             return vipStrategy.calculate(context);

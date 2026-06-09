@@ -14,13 +14,13 @@ public class StandardPricingStrategy implements PricingStrategy {
 
     @Override
     public PricingResult calculate(PricingContext context) {
-        BigDecimal basePrice = context.getBasePrice();
+        BigDecimal basePrice = context.basePrice();
 
         // Calculate bulk discount (10% off if qty >= 10)
         BigDecimal discount = BigDecimal.ZERO;
         BigDecimal discountPercentage = BigDecimal.ZERO;
 
-        if (context.getQuantity().compareTo(BigDecimal.TEN) >= 0) {
+        if (context.quantity().compareTo(BigDecimal.TEN) >= 0) {
             discountPercentage = new BigDecimal("0.10"); // 10%
             discount = basePrice.multiply(discountPercentage);
         }
@@ -28,11 +28,11 @@ public class StandardPricingStrategy implements PricingStrategy {
         BigDecimal priceAfterDiscount = basePrice.subtract(discount);
 
         // Calculate tax
-        BigDecimal tax = priceAfterDiscount.multiply(context.getTaxRate())
+        BigDecimal tax = priceAfterDiscount.multiply(context.taxRate())
                 .setScale(2, RoundingMode.HALF_UP);
 
         // Add standard shipping
-        BigDecimal shipping = context.getStandardShippingCost();
+        BigDecimal shipping = context.standardShippingCost();
 
         // Calculate final price
         BigDecimal finalPrice = priceAfterDiscount.add(tax).add(shipping);

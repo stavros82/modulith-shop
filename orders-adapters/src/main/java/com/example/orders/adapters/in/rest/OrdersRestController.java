@@ -3,6 +3,7 @@ package com.example.orders.adapters.in.rest;
 import com.example.orders.adapters.in.rest.dto.CreateOrderRequest;
 import com.example.orders.adapters.in.rest.dto.OrderResponse;
 import com.example.orders.model.Order;
+import com.example.orders.service.CreateOrderCommand;
 import com.example.orders.service.CreateOrderUseCase;
 import com.example.orders.service.GetOrderUseCase;
 import org.springframework.context.ApplicationEventPublisher;
@@ -28,8 +29,8 @@ public class OrdersRestController {
 
     public OrdersRestController(
             CreateOrderUseCase createOrderUseCase,
-            GetOrderUseCase getOrderUseCase,
-            ApplicationEventPublisher eventPublisher
+            GetOrderUseCase getOrderUseCase
+
     ) {
         this.createOrderUseCase = createOrderUseCase;
         this.getOrderUseCase = getOrderUseCase;
@@ -38,37 +39,25 @@ public class OrdersRestController {
 
     @PostMapping
     public ResponseEntity<OrderResponse> create(@Valid @RequestBody CreateOrderRequest request) {
-        // Build PricingContext from request
-        BigDecimal unitPrice = request.unitPrice() != null ? request.unitPrice() : BigDecimal.ZERO;
-        BigDecimal basePrice = unitPrice.multiply(request.quantity());
-        
-        PricingContext.CustomerType customerType = "B2B".equalsIgnoreCase(request.customerType()) 
-                ? PricingContext.CustomerType.B2B 
-                : PricingContext.CustomerType.B2C;
-
-        PricingContext pricingContext = new PricingContext(
-                basePrice,
+        // Controller just maps the Request to the Command
+        CreateOrderCommand command = new CreateOrderCommand(
+                request.productId(),
                 request.quantity(),
-                unitPrice,
-                customerType,
+                request.shippingAddress(),
+                request.paymentMethod(),
+                request.weight(),
+                request.unitPrice(),
+                request.customerType(),
                 request.isVip(),
-                null, // campaign
-                request.shippingRegion(),
-                false, // isBlackFriday
-                new BigDecimal("0.20"), // Default tax rate 20%
-                new BigDecimal("5.00")  // Default shipping 5.00
+                request.shippingRegion()
         );
 
-        Order order = createOrderUseCase.execute(
-            request.productId(), 
-            request.quantity(),
-            request.shippingAddress(),
-            request.paymentMethod(),
-            request.weight(),
-            pricingContext
-        );
+        // Call Use Case with the single Command parameter
+        Order order = createOrderUseCase.execute(command);
+
         return ResponseEntity.ok(toResponse(order));
     }
+
 
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderResponse> get(@PathVariable("orderId") String orderId) {

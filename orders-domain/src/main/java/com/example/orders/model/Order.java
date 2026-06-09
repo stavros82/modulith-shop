@@ -1,12 +1,10 @@
 package com.example.orders.model;
 
-import java.math.BigDecimal;
-import com.example.orders.validation.NoAlcoholWeekends;
-import com.example.orders.validation.NoElectronicsToPoBox;
 import com.example.orders.validation.NoCodAbove500;
 
-@NoAlcoholWeekends
-@NoElectronicsToPoBox
+import java.math.BigDecimal;
+
+
 @NoCodAbove500
 public class Order {
 

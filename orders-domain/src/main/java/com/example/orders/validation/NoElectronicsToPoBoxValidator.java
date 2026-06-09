@@ -1,5 +1,6 @@
 package com.example.orders.validation;
 
+import com.example.orders.service.CreateOrderCommand;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import com.example.orders.model.Order;
@@ -12,12 +13,10 @@ public class NoElectronicsToPoBoxValidator implements ConstraintValidator<NoElec
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
-        if (!(value instanceof Order)) {
+        if (!(value instanceof CreateOrderCommand order)) {
             return true;
         }
-        
-        Order order = (Order) value;
-        
+
         // Check if shipping address is a PO box
         String address = order.shippingAddress() != null ? order.shippingAddress() : "";
         boolean isPoBox = isPOBoxAddress(address);

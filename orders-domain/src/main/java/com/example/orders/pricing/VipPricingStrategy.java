@@ -16,7 +16,7 @@ public class VipPricingStrategy implements PricingStrategy {
 
     @Override
     public PricingResult calculate(PricingContext context) {
-        BigDecimal basePrice = context.getBasePrice();
+        BigDecimal basePrice = context.basePrice();
 
         // Apply VIP discount (15%)
         BigDecimal discount = basePrice.multiply(VIP_DISCOUNT_PERCENTAGE)
@@ -25,7 +25,7 @@ public class VipPricingStrategy implements PricingStrategy {
         BigDecimal priceAfterDiscount = basePrice.subtract(discount);
 
         // Calculate tax
-        BigDecimal tax = priceAfterDiscount.multiply(context.getTaxRate())
+        BigDecimal tax = priceAfterDiscount.multiply(context.taxRate())
                 .setScale(2, RoundingMode.HALF_UP);
 
         // Free shipping for VIP

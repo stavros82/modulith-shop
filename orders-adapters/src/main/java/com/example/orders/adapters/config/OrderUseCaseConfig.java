@@ -1,6 +1,8 @@
 package com.example.orders.adapters.config;
 
 import com.example.orders.event.OrderEventPublisher;
+import com.example.orders.pricing.PricingDomainService;
+import com.example.orders.pricing.PricingService;
 import com.example.orders.pricing.PricingStrategy;
 import com.example.orders.pricing.PricingStrategySelector;
 import com.example.orders.repository.CustomerRepository;
@@ -21,6 +23,14 @@ public class OrderUseCaseConfig {
     }
 
     @Bean
+    public PricingService pricingService(PricingStrategy pricingStrategy) {
+        // HERE is where the 'new' happens!
+        return new PricingDomainService(pricingStrategy);
+    }
+
+
+
+    @Bean
     public ValidatorFactory validatorFactory() {
         return Validation.buildDefaultValidatorFactory();
     }
@@ -31,8 +41,8 @@ public class OrderUseCaseConfig {
     }
 
     @Bean
-    CreateOrderUseCase createOrderUseCase(OrderRepository repository, OrderEventPublisher eventPublisher, Validator validator, PricingStrategy pricingStrategy) {
-        return new CreateOrderUseCase(repository, eventPublisher, validator, pricingStrategy);
+    CreateOrderUseCase createOrderUseCase(OrderRepository repository, OrderEventPublisher eventPublisher, Validator validator, PricingService  pricingService ) {
+        return new CreateOrderUseCase(repository, eventPublisher, validator, pricingService);
     }
 
     @Bean
