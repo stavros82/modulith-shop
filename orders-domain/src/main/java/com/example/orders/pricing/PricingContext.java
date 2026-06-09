@@ -1,24 +1,22 @@
 package com.example.orders.pricing;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+
 
 /**
  * Context object containing all information needed for pricing calculation.
  * Passed to pricing strategies to determine price.
+ *
+ * @param basePrice      subtotal before discounts
+ * @param customerType   B2C or B2B
+ * @param campaign       null if no campaign
+ * @param shippingRegion for tax/shipping calculation
+ * @param taxRate        e.g., 0.19 for 19% VAT
  */
-public class PricingContext {
-    private final BigDecimal basePrice; // subtotal before discounts
-    private final BigDecimal quantity;
-    private final BigDecimal unitPrice;
-    private final CustomerType customerType; // B2C or B2B
-    private final boolean isVipCustomer;
-    private final CampaignInfo campaign; // null if no campaign
-    private final String shippingRegion; // for tax/shipping calculation
-    private final boolean isBlackFridayPeriod;
-    private final BigDecimal taxRate; // e.g., 0.19 for 19% VAT
-    private final BigDecimal standardShippingCost;
-
+public record PricingContext(BigDecimal basePrice, BigDecimal quantity, BigDecimal unitPrice,
+                             com.example.orders.pricing.PricingContext.CustomerType customerType, boolean isVipCustomer,
+                             com.example.orders.pricing.PricingContext.CampaignInfo campaign, String shippingRegion,
+                             boolean isBlackFridayPeriod, BigDecimal taxRate, BigDecimal standardShippingCost) {
     public PricingContext(BigDecimal basePrice, BigDecimal quantity, BigDecimal unitPrice,
                           CustomerType customerType, boolean isVipCustomer, CampaignInfo campaign,
                           String shippingRegion, boolean isBlackFridayPeriod,
@@ -33,47 +31,6 @@ public class PricingContext {
         this.isBlackFridayPeriod = isBlackFridayPeriod;
         this.taxRate = taxRate != null ? taxRate : BigDecimal.ZERO;
         this.standardShippingCost = standardShippingCost != null ? standardShippingCost : BigDecimal.ZERO;
-    }
-
-    // Getters
-    public BigDecimal getBasePrice() {
-        return basePrice;
-    }
-
-    public BigDecimal getQuantity() {
-        return quantity;
-    }
-
-    public BigDecimal getUnitPrice() {
-        return unitPrice;
-    }
-
-    public CustomerType getCustomerType() {
-        return customerType;
-    }
-
-    public boolean isVipCustomer() {
-        return isVipCustomer;
-    }
-
-    public CampaignInfo getCampaign() {
-        return campaign;
-    }
-
-    public String getShippingRegion() {
-        return shippingRegion;
-    }
-
-    public boolean isBlackFridayPeriod() {
-        return isBlackFridayPeriod;
-    }
-
-    public BigDecimal getTaxRate() {
-        return taxRate;
-    }
-
-    public BigDecimal getStandardShippingCost() {
-        return standardShippingCost;
     }
 
     /**
@@ -97,8 +54,8 @@ public class PricingContext {
         private final boolean hasFreeShipping;     // campaign includes free shipping
 
         public CampaignInfo(String campaignName, BigDecimal campaignDiscount, BigDecimal productDiscount,
-                           BigDecimal loyaltyDiscount, boolean isBuyOneGetOne, boolean isHalfSecondItem,
-                           boolean hasFreeShipping) {
+                            BigDecimal loyaltyDiscount, boolean isBuyOneGetOne, boolean isHalfSecondItem,
+                            boolean hasFreeShipping) {
             this.campaignName = campaignName;
             this.campaignDiscount = campaignDiscount != null ? campaignDiscount : BigDecimal.ZERO;
             this.productDiscount = productDiscount != null ? productDiscount : BigDecimal.ZERO;

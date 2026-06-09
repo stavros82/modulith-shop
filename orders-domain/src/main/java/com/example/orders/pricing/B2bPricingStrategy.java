@@ -18,7 +18,7 @@ public class B2bPricingStrategy implements PricingStrategy {
 
     @Override
     public PricingResult calculate(PricingContext context) {
-        BigDecimal basePrice = context.getBasePrice();
+        BigDecimal basePrice = context.basePrice();
 
         // Apply wholesale discount (10%)
         BigDecimal discount = basePrice.multiply(B2B_WHOLESALE_DISCOUNT)
@@ -28,14 +28,14 @@ public class B2bPricingStrategy implements PricingStrategy {
 
         // No VAT for intra-EU (assuming EU regions like "DE", "FR", "IT", etc.)
         BigDecimal tax = BigDecimal.ZERO;
-        if (!isIntraEu(context.getShippingRegion())) {
-            tax = priceAfterDiscount.multiply(context.getTaxRate())
+        if (!isIntraEu(context.shippingRegion())) {
+            tax = priceAfterDiscount.multiply(context.taxRate())
                     .setScale(2, RoundingMode.HALF_UP);
         }
 
         // Contract shipping (typically lower than standard)
         // For simplicity, using 50% of standard shipping cost
-        BigDecimal shipping = context.getStandardShippingCost()
+        BigDecimal shipping = context.standardShippingCost()
                 .multiply(new BigDecimal("0.50"))
                 .setScale(2, RoundingMode.HALF_UP);
 

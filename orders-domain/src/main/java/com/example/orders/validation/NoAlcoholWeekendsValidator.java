@@ -1,8 +1,9 @@
 package com.example.orders.validation;
 
+import com.example.orders.service.CreateOrderCommand;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import com.example.orders.model.Order;
+
 import java.time.LocalDateTime;
 import java.time.DayOfWeek;
 
@@ -14,11 +15,9 @@ public class NoAlcoholWeekendsValidator implements ConstraintValidator<NoAlcohol
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
-        if (!(value instanceof Order)) {
+        if (!(value instanceof CreateOrderCommand order)) {
             return true;
         }
-
-        Order order = (Order) value;
 
         // Check if today is weekend (Saturday or Sunday)
         LocalDateTime now = LocalDateTime.now();

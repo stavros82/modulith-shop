@@ -175,7 +175,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 2, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 5.5, \"orderTotal\": 99.98 }"
+          "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 2, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 5.5, \"unitPrice\": 49.99, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\" }"
         },
         "url": {
           "raw": "{{baseUrl}}/orders",
@@ -272,7 +272,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 60, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 5.5, \"orderTotal\": 99.98 }"
+              "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 60, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 5.5, \"unitPrice\": 49.99, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\" }"
             },
             "url": {
               "raw": "{{baseUrl}}/orders",
@@ -314,7 +314,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 2, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 40, \"orderTotal\": 99.98 }"
+              "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 2, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 40, \"unitPrice\": 49.99, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\" }"
             },
             "url": {
               "raw": "{{baseUrl}}/orders",
@@ -356,7 +356,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{ \"productId\": \"laptop-001\", \"quantity\": 1, \"shippingAddress\": \"P.O. Box 123\", \"paymentMethod\": \"CARD\", \"weight\": 5.5, \"orderTotal\": 1299.99 }"
+              "raw": "{ \"productId\": \"laptop-001\", \"quantity\": 1, \"shippingAddress\": \"P.O. Box 123\", \"paymentMethod\": \"CARD\", \"weight\": 5.5, \"unitPrice\": 1299.99, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\" }"
             },
             "url": {
               "raw": "{{baseUrl}}/orders",
@@ -398,7 +398,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 15, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"COD\", \"weight\": 15.5, \"orderTotal\": 750.00 }"
+              "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 15, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"COD\", \"weight\": 15.5, \"unitPrice\": 50.00, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\" }"
             },
             "url": {
               "raw": "{{baseUrl}}/orders",
@@ -440,7 +440,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{ \"productId\": \"\", \"quantity\": 2, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"\", \"weight\": 5.5, \"orderTotal\": 99.98 }"
+              "raw": "{ \"productId\": \"\", \"quantity\": 2, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"\", \"weight\": 5.5, \"unitPrice\": 49.99, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\" }"
             },
             "url": {
               "raw": "{{baseUrl}}/orders",
