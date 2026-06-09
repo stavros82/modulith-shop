@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# gemini-cli settings
+.gemini/
+
+# GitHub App cre1dentials
+gha-creds-*.json
+/.github/
