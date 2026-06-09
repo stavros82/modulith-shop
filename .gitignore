@@ -35,6 +35,3 @@ build/
 # gemini-cli settings
 .gemini/
 
-# GitHub App cre1dentials
-gha-creds-*.json
-/.github/
