@@ -22,6 +22,9 @@ public record CreateOrderRequest(
         @MaxWeight(value = 30.0, message = "Order cannot exceed 30 kg")
         BigDecimal weight,
         
-        BigDecimal orderTotal
+        BigDecimal unitPrice,
+        String customerType,
+        boolean isVip,
+        String shippingRegion
 ) {}
 

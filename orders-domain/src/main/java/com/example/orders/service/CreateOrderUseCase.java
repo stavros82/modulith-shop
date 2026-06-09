@@ -7,6 +7,9 @@ import com.example.orders.repository.OrderRepository;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+import com.example.orders.pricing.PricingStrategy;
+import com.example.orders.pricing.PricingContext;
+import com.example.orders.pricing.PricingResult;
 import com.example.orders.exception.BusinessValidationException;
 import java.util.List;
 import java.util.ArrayList;
@@ -20,16 +23,21 @@ public class CreateOrderUseCase {
     private final OrderRepository repository;
     private final OrderEventPublisher eventPublisher;
     private final Validator validator;
+    private final PricingStrategy pricingStrategy;
 
-    public CreateOrderUseCase(OrderRepository repository, OrderEventPublisher eventPublisher, Validator validator) {
+    public CreateOrderUseCase(OrderRepository repository, OrderEventPublisher eventPublisher, Validator validator, PricingStrategy pricingStrategy) {
         this.repository = repository;
         this.eventPublisher = eventPublisher;
         this.validator = validator;
+        this.pricingStrategy = pricingStrategy;
     }
 
     public Order execute(String productId, BigDecimal quantity, String shippingAddress,
-                         String paymentMethod, BigDecimal weight, BigDecimal orderTotal) {
+                         String paymentMethod, BigDecimal weight, PricingContext pricingContext) {
 
+        // Use Strategy Pattern to calculate order total
+        PricingResult pricingResult = pricingStrategy.calculate(pricingContext);
+        BigDecimal orderTotal = pricingResult.finalPrice();
 
         Order order = new Order(UUID.randomUUID().toString(), productId, quantity,
                                 shippingAddress, paymentMethod, weight, orderTotal);

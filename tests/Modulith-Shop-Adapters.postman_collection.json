@@ -384,7 +384,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"productId\":\"product-123\",\"quantity\":10,\"shippingAddress\":\"123 Main Street\",\"paymentMethod\":\"CARD\",\"weight\":\"15.0\",\"orderTotal\":\"500.00\"}"
+              "raw": "{\"productId\":\"product-123\",\"quantity\":10,\"shippingAddress\":\"123 Main Street\",\"paymentMethod\":\"CARD\",\"weight\":\"15.0\",\"unitPrice\":\"50.00\",\"customerType\":\"B2C\",\"isVip\":false,\"shippingRegion\":\"US\"}"
             },
             "url": {
               "raw": "http://localhost:8080/orders",
@@ -413,7 +413,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"productId\":\"product-123\",\"quantity\":100,\"shippingAddress\":\"123 Main Street\",\"paymentMethod\":\"CARD\",\"weight\":\"25.0\",\"orderTotal\":\"1000.00\"}"
+              "raw": "{\"productId\":\"product-123\",\"quantity\":100,\"shippingAddress\":\"123 Main Street\",\"paymentMethod\":\"CARD\",\"weight\":\"25.0\",\"unitPrice\":\"10.00\",\"customerType\":\"B2C\",\"isVip\":false,\"shippingRegion\":\"US\"}"
             },
             "url": {
               "raw": "http://localhost:8080/orders",
@@ -442,7 +442,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"productId\":\"product-456\",\"quantity\":5,\"shippingAddress\":\"123 Main Street\",\"paymentMethod\":\"CARD\",\"weight\":\"35.5\",\"orderTotal\":\"500.00\"}"
+              "raw": "{\"productId\":\"product-456\",\"quantity\":5,\"shippingAddress\":\"123 Main Street\",\"paymentMethod\":\"CARD\",\"weight\":\"35.5\",\"unitPrice\":\"100.00\",\"customerType\":\"B2C\",\"isVip\":false,\"shippingRegion\":\"US\"}"
             },
             "url": {
               "raw": "http://localhost:8080/orders",
@@ -471,7 +471,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"productId\":\"wine-cabernet\",\"quantity\":2,\"shippingAddress\":\"123 Main Street\",\"paymentMethod\":\"CARD\",\"weight\":\"4.0\",\"orderTotal\":\"50.00\"}"
+              "raw": "{\"productId\":\"wine-cabernet\",\"quantity\":2,\"shippingAddress\":\"123 Main Street\",\"paymentMethod\":\"CARD\",\"weight\":\"4.0\",\"unitPrice\":\"25.00\",\"customerType\":\"B2C\",\"isVip\":false,\"shippingRegion\":\"US\"}"
             },
             "url": {
               "raw": "http://localhost:8080/orders",
@@ -500,7 +500,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"productId\":\"laptop-dell\",\"quantity\":1,\"shippingAddress\":\"P.O. Box 123, New York, NY\",\"paymentMethod\":\"CARD\",\"weight\":\"2.0\",\"orderTotal\":\"1200.00\"}"
+              "raw": "{\"productId\":\"laptop-dell\",\"quantity\":1,\"shippingAddress\":\"P.O. Box 123, New York, NY\",\"paymentMethod\":\"CARD\",\"weight\":\"2.0\",\"unitPrice\":\"1200.00\",\"customerType\":\"B2C\",\"isVip\":false,\"shippingRegion\":\"US\"}"
             },
             "url": {
               "raw": "http://localhost:8080/orders",
@@ -529,7 +529,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"productId\":\"product-789\",\"quantity\":10,\"shippingAddress\":\"123 Main Street\",\"paymentMethod\":\"COD\",\"weight\":\"15.0\",\"orderTotal\":\"750.00\"}"
+              "raw": "{\"productId\":\"product-789\",\"quantity\":10,\"shippingAddress\":\"123 Main Street\",\"paymentMethod\":\"COD\",\"weight\":\"15.0\",\"unitPrice\":\"75.00\",\"customerType\":\"B2C\",\"isVip\":false,\"shippingRegion\":\"US\"}"
             },
             "url": {
               "raw": "http://localhost:8080/orders",

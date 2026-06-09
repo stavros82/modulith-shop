@@ -1,6 +1,8 @@
 package com.example.orders.adapters.config;
 
 import com.example.orders.event.OrderEventPublisher;
+import com.example.orders.pricing.PricingStrategy;
+import com.example.orders.pricing.PricingStrategySelector;
 import com.example.orders.repository.CustomerRepository;
 import com.example.orders.repository.OrderRepository;
 import com.example.orders.service.*;
@@ -14,6 +16,11 @@ import jakarta.validation.Validator;
 public class OrderUseCaseConfig {
 
     @Bean
+    public PricingStrategy pricingStrategy() {
+        return new PricingStrategySelector();
+    }
+
+    @Bean
     public ValidatorFactory validatorFactory() {
         return Validation.buildDefaultValidatorFactory();
     }
@@ -24,8 +31,8 @@ public class OrderUseCaseConfig {
     }
 
     @Bean
-    CreateOrderUseCase createOrderUseCase(OrderRepository repository, OrderEventPublisher eventPublisher, Validator validator) {
-        return new CreateOrderUseCase(repository, eventPublisher, validator);
+    CreateOrderUseCase createOrderUseCase(OrderRepository repository, OrderEventPublisher eventPublisher, Validator validator, PricingStrategy pricingStrategy) {
+        return new CreateOrderUseCase(repository, eventPublisher, validator, pricingStrategy);
     }
 
     @Bean

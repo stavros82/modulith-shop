@@ -14,6 +14,8 @@ import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import com.example.orders.pricing.PricingContext;
+import java.math.BigDecimal;
 import static com.example.orders.adapters.in.rest.mapper.OrderMapper.toResponse;
 import com.example.orders.exception.BusinessValidationException;
 
@@ -36,13 +38,34 @@ public class OrdersRestController {
 
     @PostMapping
     public ResponseEntity<OrderResponse> create(@Valid @RequestBody CreateOrderRequest request) {
+        // Build PricingContext from request
+        BigDecimal unitPrice = request.unitPrice() != null ? request.unitPrice() : BigDecimal.ZERO;
+        BigDecimal basePrice = unitPrice.multiply(request.quantity());
+        
+        PricingContext.CustomerType customerType = "B2B".equalsIgnoreCase(request.customerType()) 
+                ? PricingContext.CustomerType.B2B 
+                : PricingContext.CustomerType.B2C;
+
+        PricingContext pricingContext = new PricingContext(
+                basePrice,
+                request.quantity(),
+                unitPrice,
+                customerType,
+                request.isVip(),
+                null, // campaign
+                request.shippingRegion(),
+                false, // isBlackFriday
+                new BigDecimal("0.20"), // Default tax rate 20%
+                new BigDecimal("5.00")  // Default shipping 5.00
+        );
+
         Order order = createOrderUseCase.execute(
             request.productId(), 
             request.quantity(),
             request.shippingAddress(),
             request.paymentMethod(),
             request.weight(),
-            request.orderTotal()
+            pricingContext
         );
         return ResponseEntity.ok(toResponse(order));
     }
