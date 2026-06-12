@@ -36,15 +36,8 @@ public class ProductFieldResolver {
 
     @SchemaMapping(typeName = "Product", field = "reviews")
     public List<ReviewResponse> reviews(ProductResponse product) {
-        System.out.println(">>> LOADING REVIEWS FOR PRODUCT = " + product.id());
-
-
-
-
-       List<ReviewResponse> responseList=reviewRepo.findByProductId(product.id()).stream()
+    return reviewRepo.findByProductId(product.id()).stream()
                 .map(ReviewMapper::toResponse)
                 .toList();
-        System.out.println(">>> REVIEWS FROM DB = " + responseList.size());
-        return responseList;
     }
 }
