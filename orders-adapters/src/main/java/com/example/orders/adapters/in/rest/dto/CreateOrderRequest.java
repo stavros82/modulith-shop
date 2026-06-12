@@ -25,6 +25,10 @@ public record CreateOrderRequest(
         BigDecimal unitPrice,
         String customerType,
         boolean isVip,
-        String shippingRegion
+        String shippingRegion,
+        String requestIp,
+        String billingCountry,
+        String shippingCountry,
+        int previousFailedPayments
 ) {}
 

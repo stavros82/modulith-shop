@@ -1,11 +1,12 @@
 package com.example.orders.pricing;
 
+import com.example.orders.model.CustomerType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -83,7 +84,7 @@ class StandardPricingStrategyTest {
                 basePrice,
                 quantity,
                 unitPrice,
-                PricingContext.CustomerType.B2C,
+                CustomerType.B2C,
                 false, // isVip
                 null,  // campaign
                 "DEFAULT_REGION",

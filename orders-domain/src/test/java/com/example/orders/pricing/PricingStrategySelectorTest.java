@@ -1,5 +1,6 @@
 package com.example.orders.pricing;
 
+import com.example.orders.model.CustomerType;
 import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,7 +16,7 @@ class PricingStrategySelectorTest {
         PricingContext context = createBaseContext();
         PricingContext b2bContext = new PricingContext(
                 context.basePrice(), context.quantity(), context.unitPrice(),
-                PricingContext.CustomerType.B2B, false, null, "DE", 
+            CustomerType.B2B, false, null, "DE",
                 false, new BigDecimal("0.19"), new BigDecimal("5.00")
         );
 
@@ -33,7 +34,7 @@ class PricingStrategySelectorTest {
         PricingContext context = createBaseContext();
         PricingContext vipContext = new PricingContext(
                 context.basePrice(), context.quantity(), context.unitPrice(),
-                PricingContext.CustomerType.B2C, true, null, "DE", 
+                CustomerType.B2C, true, null, "DE",
                 false, new BigDecimal("0.19"), new BigDecimal("5.00")
         );
 
@@ -51,7 +52,7 @@ class PricingStrategySelectorTest {
         PricingContext context = createBaseContext();
         PricingContext standardContext = new PricingContext(
                 context.basePrice(), context.quantity(), context.unitPrice(),
-                PricingContext.CustomerType.B2C, false, null, "DE", 
+               CustomerType.B2C, false, null, "DE",
                 false, new BigDecimal("0.19"), new BigDecimal("5.00")
         );
 
@@ -68,7 +69,7 @@ class PricingStrategySelectorTest {
                 new BigDecimal("100.00"),
                 new BigDecimal("1"),
                 new BigDecimal("100.00"),
-                PricingContext.CustomerType.B2C,
+                CustomerType.B2C,
                 false,
                 null,
                 "DE",

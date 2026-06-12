@@ -1,5 +1,6 @@
 package com.example.orders.pricing;
 
+import com.example.orders.model.CustomerType;
 import com.example.orders.service.CreateOrderCommand;
 
 import java.math.BigDecimal;
@@ -19,7 +20,7 @@ public class PricingDomainService implements PricingService {
             command.unitPrice().multiply(command.quantity()),
             command.quantity(),
             command.unitPrice(),
-            "B2B".equalsIgnoreCase(command.customerType()) ? PricingContext.CustomerType.B2B : PricingContext.CustomerType.B2C,
+            "B2B".equalsIgnoreCase(command.customerType()) ? CustomerType.B2B : CustomerType.B2C,
             command.isVip(),
             null,
             command.shippingRegion(),

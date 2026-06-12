@@ -27,7 +27,11 @@ class PricingServiceTest {
                 new BigDecimal("50.00"),
                 "B2C",
                 false,
-                "DE"
+                "DE",
+                "127.0.0.1",
+                "DE",
+                "DE",
+                0
         );
         BigDecimal expectedTotal = new BigDecimal("110.00");
         when(pricingService.calculateOrderTotal(command)).thenReturn(expectedTotal);

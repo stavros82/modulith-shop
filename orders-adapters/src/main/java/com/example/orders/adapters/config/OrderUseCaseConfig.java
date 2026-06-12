@@ -8,6 +8,7 @@ import com.example.orders.pricing.PricingStrategySelector;
 import com.example.orders.repository.CustomerRepository;
 import com.example.orders.repository.OrderRepository;
 import com.example.orders.service.*;
+import com.example.orders.validation.ValidationPipeline;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import jakarta.validation.Validation;
@@ -41,8 +42,13 @@ public class OrderUseCaseConfig {
     }
 
     @Bean
-    CreateOrderUseCase createOrderUseCase(OrderRepository repository, OrderEventPublisher eventPublisher, Validator validator, PricingService  pricingService ) {
-        return new CreateOrderUseCase(repository, eventPublisher, validator, pricingService);
+    public ValidationPipeline validationPipeline() {
+        return new ValidationPipeline();
+    }
+
+    @Bean
+    CreateOrderUseCase createOrderUseCase(OrderRepository repository, OrderEventPublisher eventPublisher, Validator validator, PricingService pricingService, ValidationPipeline validationPipeline) {
+        return new CreateOrderUseCase(repository, eventPublisher, validator, pricingService, validationPipeline);
     }
 
     @Bean
