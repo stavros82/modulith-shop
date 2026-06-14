@@ -13,11 +13,7 @@ import com.example.catalog.adapters.in.graphql.mapper.CategoryMapper;
 import com.example.catalog.adapters.in.graphql.mapper.ProductMapper;
 import com.example.catalog.adapters.in.graphql.mapper.QualityIssueMapper;
 import com.example.catalog.adapters.in.graphql.mapper.ReviewMapper;
-import com.example.catalog.service.AddReviewUseCase;
-import com.example.catalog.service.CreateCategoryUseCase;
-import com.example.catalog.service.CreateProductUseCase;
-import com.example.catalog.service.ReportQualityIssueUseCase;
-import com.example.catalog.service.UpdateProductUseCase;
+import com.example.catalog.adapters.in.graphql.service.CatalogManagementService;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.stereotype.Controller;
@@ -25,35 +21,23 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class MutationResolver {
 
-    private final CreateCategoryUseCase createCategory;
-    private final CreateProductUseCase createProduct;
-    private final UpdateProductUseCase updateProduct;
-    private final AddReviewUseCase addReview;
-    private final ReportQualityIssueUseCase reportIssue;
+    private final CatalogManagementService catalogManagementService;
 
     public MutationResolver(
-            CreateCategoryUseCase createCategory,
-            CreateProductUseCase createProduct,
-            UpdateProductUseCase updateProduct,
-            AddReviewUseCase addReview,
-            ReportQualityIssueUseCase reportIssue
+            CatalogManagementService catalogManagementService
     ) {
-        this.createCategory = createCategory;
-        this.createProduct = createProduct;
-        this.updateProduct = updateProduct;
-        this.addReview = addReview;
-        this.reportIssue = reportIssue;
+        this.catalogManagementService = catalogManagementService;
     }
 
     @MutationMapping
     public CategoryResponse createCategory(@Argument("input") CreateCategoryInput input) {
-        var category = createCategory.execute(input.name(), input.parentId());
+        var category = catalogManagementService.createCategory(input.name(), input.parentId());
         return CategoryMapper.toResponse(category);
     }
 
     @MutationMapping
     public ProductResponse createProduct(@Argument("input") CreateProductInput input) {
-        var product = createProduct.execute(
+        var product = catalogManagementService.createProduct(
                 input.name(),
                 input.description(),
                 input.price(),
@@ -65,7 +49,7 @@ public class MutationResolver {
 
     @MutationMapping
     public ProductResponse updateProduct(@Argument("input") UpdateProductInput input) {
-        var product = updateProduct.execute(
+        var product = catalogManagementService.updateProduct(
                 input.id(),
                 input.name(),
                 input.description(),
@@ -77,7 +61,7 @@ public class MutationResolver {
 
     @MutationMapping
     public ReviewResponse addReview(@Argument("input") AddReviewInput input) {
-        var review = addReview.execute(
+        var review = catalogManagementService.addReview(
                 input.productId(),
                 input.rating(),
                 input.comment()
@@ -87,7 +71,7 @@ public class MutationResolver {
 
     @MutationMapping
     public QualityIssueResponse reportQualityIssue(@Argument("input")ReportQualityIssueInput input) {
-        var issue = reportIssue.execute(
+        var issue = catalogManagementService.reportQualityIssue(
                 input.productId(),
                 input.type(),
                 input.severity()

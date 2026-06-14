@@ -2,10 +2,10 @@ package com.example.orders.adapters.in.rest;
 
 import com.example.orders.adapters.in.rest.dto.CreateOrderRequest;
 import com.example.orders.adapters.in.rest.dto.OrderResponse;
+import com.example.orders.adapters.in.rest.service.OrderManagementService;
+import com.example.orders.adapters.in.rest.service.OrderQueryService;
 import com.example.orders.model.Order;
 import com.example.orders.service.CreateOrderCommand;
-import com.example.orders.service.CreateOrderUseCase;
-import com.example.orders.service.GetOrderUseCase;
 
 import org.springframework.http.ResponseEntity;
 
@@ -19,16 +19,16 @@ import static com.example.orders.adapters.in.rest.mapper.OrderMapper.toResponse;
 @RequestMapping("/orders")
 public class OrdersRestController {
 
-    private final CreateOrderUseCase createOrderUseCase;
-    private final GetOrderUseCase getOrderUseCase;
+    private final OrderManagementService orderManagementService;
+    private final OrderQueryService orderQueryService;
 
     public OrdersRestController(
-            CreateOrderUseCase createOrderUseCase,
-            GetOrderUseCase getOrderUseCase
+            OrderManagementService orderManagementService,
+            OrderQueryService orderQueryService
 
     ) {
-        this.createOrderUseCase = createOrderUseCase;
-        this.getOrderUseCase = getOrderUseCase;
+        this.orderManagementService = orderManagementService;
+        this.orderQueryService = orderQueryService;
 
     }
 
@@ -52,7 +52,7 @@ public class OrdersRestController {
         );
 
         // Call Use Case with the single Command parameter
-        Order order = createOrderUseCase.execute(command);
+        Order order = orderManagementService.createOrder(command);
 
         return ResponseEntity.ok(toResponse(order));
     }
@@ -60,12 +60,6 @@ public class OrdersRestController {
 
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderResponse> get(@PathVariable("orderId") String orderId) {
-        return ResponseEntity.ok(toResponse(getOrderUseCase.execute(orderId)));
+        return ResponseEntity.ok(toResponse(orderQueryService.getOrder(orderId)));
     }
-
-
-
-
-
 }
-
