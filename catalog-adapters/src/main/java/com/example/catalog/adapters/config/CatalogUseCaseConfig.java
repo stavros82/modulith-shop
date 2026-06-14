@@ -1,6 +1,7 @@
 package com.example.catalog.adapters.config;
 
 
+import com.example.catalog.event.ProductEventPublisher;
 import com.example.catalog.repository.CategoryRepository;
 import com.example.catalog.repository.ProductRepository;
 import com.example.catalog.repository.QualityIssueRepository;
@@ -20,9 +21,10 @@ public class CatalogUseCaseConfig {
     @Bean
     public CreateProductUseCase createProductUseCase(
             ProductRepository productRepository,
-            CategoryRepository categoryRepository
+            CategoryRepository categoryRepository,
+            ProductEventPublisher eventPublisher
     ) {
-        return new CreateProductUseCase(productRepository, categoryRepository);
+        return new CreateProductUseCase(productRepository, categoryRepository, eventPublisher);
     }
 
     @Bean
@@ -49,8 +51,11 @@ public class CatalogUseCaseConfig {
     }
 
     @Bean
-    public ReportQualityIssueUseCase reportQualityIssueUseCase(QualityIssueRepository qualityIssueRepository) {
-        return new ReportQualityIssueUseCase(qualityIssueRepository);
+    public ReportQualityIssueUseCase reportQualityIssueUseCase(
+            QualityIssueRepository qualityIssueRepository,
+            ProductEventPublisher eventPublisher
+    ) {
+        return new ReportQualityIssueUseCase(qualityIssueRepository, eventPublisher);
     }
 
     @Bean

@@ -171,11 +171,16 @@
           {
             "key": "Content-Type",
             "value": "application/json"
+          },
+          {
+            "key": "X-Customer-Id",
+            "value": "{{customerId}}"
           }
+
         ],
         "body": {
           "mode": "raw",
-          "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 2, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 5.5, \"unitPrice\": 49.99, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\" }"
+          "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 2, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 5.5, \"unitPrice\": 49.99, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\", \"requestIp\": \"127.0.0.1\", \"billingCountry\": \"US\", \"shippingCountry\": \"US\", \"previousFailedPayments\": 0 }"
         },
         "url": {
           "raw": "{{baseUrl}}/orders",
@@ -272,7 +277,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 60, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 5.5, \"unitPrice\": 49.99, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\" }"
+              "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 60, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 5.5, \"unitPrice\": 49.99, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\", \"requestIp\": \"127.0.0.1\", \"billingCountry\": \"US\", \"shippingCountry\": \"US\", \"previousFailedPayments\": 0 }"
             },
             "url": {
               "raw": "{{baseUrl}}/orders",
@@ -314,7 +319,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 2, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 40, \"unitPrice\": 49.99, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\" }"
+              "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 2, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 40, \"unitPrice\": 49.99, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\", \"requestIp\": \"127.0.0.1\", \"billingCountry\": \"US\", \"shippingCountry\": \"US\", \"previousFailedPayments\": 0 }"
             },
             "url": {
               "raw": "{{baseUrl}}/orders",
@@ -356,7 +361,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{ \"productId\": \"laptop-001\", \"quantity\": 1, \"shippingAddress\": \"P.O. Box 123\", \"paymentMethod\": \"CARD\", \"weight\": 5.5, \"unitPrice\": 1299.99, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\" }"
+              "raw": "{ \"productId\": \"laptop-001\", \"quantity\": 1, \"shippingAddress\": \"P.O. Box 123\", \"paymentMethod\": \"CARD\", \"weight\": 5.5, \"unitPrice\": 1299.99, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\", \"requestIp\": \"127.0.0.1\", \"billingCountry\": \"US\", \"shippingCountry\": \"US\", \"previousFailedPayments\": 0 }"
             },
             "url": {
               "raw": "{{baseUrl}}/orders",
@@ -398,7 +403,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 15, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"COD\", \"weight\": 15.5, \"unitPrice\": 50.00, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\" }"
+              "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 15, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"COD\", \"weight\": 15.5, \"unitPrice\": 50.00, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\", \"requestIp\": \"127.0.0.1\", \"billingCountry\": \"US\", \"shippingCountry\": \"US\", \"previousFailedPayments\": 0 }"
             },
             "url": {
               "raw": "{{baseUrl}}/orders",
@@ -440,7 +445,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{ \"productId\": \"\", \"quantity\": 2, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"\", \"weight\": 5.5, \"unitPrice\": 49.99, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\" }"
+              "raw": "{ \"productId\": \"\", \"quantity\": 2, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"\", \"weight\": 5.5, \"unitPrice\": 49.99, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\", \"requestIp\": \"127.0.0.1\", \"billingCountry\": \"US\", \"shippingCountry\": \"US\", \"previousFailedPayments\": 0 }"
             },
             "url": {
               "raw": "{{baseUrl}}/orders",
@@ -454,8 +459,158 @@
             "description": "Create order with empty productId and paymentMethod (should fail: Required field validation)"
           },
           "response": []
+        },
+        {
+          "name": "F6. Fail - Payment: COD for B2B",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Validation error: COD only B2C', function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+                  "  pm.expect(pm.response.text()).to.include('only available for B2C');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 1, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"COD\", \"weight\": 1.0, \"unitPrice\": 50.00, \"customerType\": \"B2B\", \"isVip\": false, \"shippingRegion\": \"US\", \"requestIp\": \"127.0.0.1\", \"billingCountry\": \"US\", \"shippingCountry\": \"US\", \"previousFailedPayments\": 0 }"
+            },
+            "url": { "raw": "{{baseUrl}}/orders", "host": ["{{baseUrl}}"], "path": ["orders"] },
+            "description": "8.3: COD is not allowed for B2B customers"
+          },
+          "response": []
+        },
+        {
+          "name": "F7. Fail - Payment: Invoice for B2C",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Validation error: Invoice only B2B', function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+                  "  pm.expect(pm.response.text()).to.include('strictly reserved for B2B');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 1, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"INVOICE\", \"weight\": 1.0, \"unitPrice\": 50.00, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\", \"requestIp\": \"127.0.0.1\", \"billingCountry\": \"US\", \"shippingCountry\": \"US\", \"previousFailedPayments\": 0 }"
+            },
+            "url": { "raw": "{{baseUrl}}/orders", "host": ["{{baseUrl}}"], "path": ["orders"] },
+            "description": "8.3: Invoice payment is strictly for B2B customers"
+          },
+          "response": []
+        },
+        {
+          "name": "F8. Fail - Fraud: High Amount",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Validation error: High amount fraud', function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+                  "  pm.expect(pm.response.text()).to.include('threshold');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 1, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 1.0, \"unitPrice\": 15000.00, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\", \"requestIp\": \"127.0.0.1\", \"billingCountry\": \"US\", \"shippingCountry\": \"US\", \"previousFailedPayments\": 0 }"
+            },
+            "url": { "raw": "{{baseUrl}}/orders", "host": ["{{baseUrl}}"], "path": ["orders"] },
+            "description": "8.4: Orders exceeding the safety threshold (e.g., €10,000) should be blocked"
+          },
+          "response": []
+        },
+        {
+          "name": "F9. Fail - Fraud: Country Mismatch",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Validation error: Country mismatch', function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+                  "  pm.expect(pm.response.text()).to.include('match');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 1, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 1.0, \"unitPrice\": 50.00, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\", \"requestIp\": \"127.0.0.1\", \"billingCountry\": \"US\", \"shippingCountry\": \"GR\", \"previousFailedPayments\": 0 }"
+            },
+            "url": { "raw": "{{baseUrl}}/orders", "host": ["{{baseUrl}}"], "path": ["orders"] },
+            "description": "8.4: Fraud alert if billing and shipping countries do not match"
+          },
+          "response": []
+        },
+        {
+          "name": "F10. Fail - Fraud: Too Many Failed Payments",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Validation error: Failed payments history', function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+                  "  pm.expect(pm.response.text()).to.include('failed payment');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 1, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 1.0, \"unitPrice\": 50.00, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\", \"requestIp\": \"127.0.0.1\", \"billingCountry\": \"US\", \"shippingCountry\": \"US\", \"previousFailedPayments\": 5 }"
+            },
+            "url": { "raw": "{{baseUrl}}/orders", "host": ["{{baseUrl}}"], "path": ["orders"] },
+            "description": "8.4: Block orders for customers with a history of high failed payments"
+          },
+          "response": []
         }
-       ]
+      ]
     }
   ],
   "variable": [
@@ -465,4 +620,3 @@
     }
   ]
 }
-

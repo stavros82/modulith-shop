@@ -2,6 +2,7 @@ package com.example.catalog.service;
 
 
 
+import com.example.catalog.event.ProductEventPublisher;
 import com.example.catalog.model.QualityIssue;
 import com.example.catalog.repository.QualityIssueRepository;
 
@@ -11,9 +12,11 @@ import java.util.UUID;
 public class ReportQualityIssueUseCase {
 
     private final QualityIssueRepository qualityIssueRepository;
+    private final ProductEventPublisher eventPublisher;
 
-    public ReportQualityIssueUseCase(QualityIssueRepository qualityIssueRepository) {
+    public ReportQualityIssueUseCase(QualityIssueRepository qualityIssueRepository, ProductEventPublisher eventPublisher) {
         this.qualityIssueRepository = qualityIssueRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     public QualityIssue execute(String productId, String type, String severity) {
@@ -26,6 +29,8 @@ public class ReportQualityIssueUseCase {
                 OffsetDateTime.now()
         );
 
-        return qualityIssueRepository.save(issue);
+        QualityIssue savedIssue = qualityIssueRepository.save(issue);
+        eventPublisher.publishQualityIssueReported(savedIssue);
+        return savedIssue;
     }
 }

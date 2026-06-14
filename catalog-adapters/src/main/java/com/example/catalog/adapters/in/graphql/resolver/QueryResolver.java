@@ -6,10 +6,7 @@ import com.example.catalog.adapters.in.graphql.dto.output.ProductResponse;
 import com.example.catalog.adapters.in.graphql.mapper.CatalogReportMapper;
 import com.example.catalog.adapters.in.graphql.mapper.CategoryMapper;
 import com.example.catalog.adapters.in.graphql.mapper.ProductMapper;
-import com.example.catalog.repository.CategoryRepository;
-import com.example.catalog.service.GetCatalogReportUseCase;
-import com.example.catalog.service.GetProductUseCase;
-import com.example.catalog.service.ListProductsUseCase;
+import com.example.catalog.adapters.in.graphql.service.CatalogQueryService;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
@@ -19,44 +16,33 @@ import java.util.List;
 @Controller
 public class QueryResolver {
 
-    private final GetProductUseCase getProduct;
-    private final ListProductsUseCase listProducts;
-    private final GetCatalogReportUseCase catalogReport;
-    private final CategoryRepository categoryRepo;
+    private final CatalogQueryService catalogQueryService;
 
-    public QueryResolver(
-            GetProductUseCase getProduct,
-            ListProductsUseCase listProducts,
-            GetCatalogReportUseCase catalogReport,
-            CategoryRepository categoryRepo
-    ) {
-        this.getProduct = getProduct;
-        this.listProducts = listProducts;
-        this.catalogReport = catalogReport;
-        this.categoryRepo = categoryRepo;
+    public QueryResolver(CatalogQueryService catalogQueryService) {
+        this.catalogQueryService = catalogQueryService;
     }
 
     @QueryMapping
     public ProductResponse product(@Argument("id") String id) {
-        return ProductMapper.toResponse(getProduct.execute(id));
+        return ProductMapper.toResponse(catalogQueryService.getProduct(id));
     }
 
     @QueryMapping
     public List<ProductResponse> products() {
-        return listProducts.execute().stream()
+        return catalogQueryService.listProducts().stream()
                 .map(ProductMapper::toResponse)
                 .toList();
     }
 
     @QueryMapping
     public List<CategoryResponse> categories() {
-        return categoryRepo.findAll().stream()
+        return catalogQueryService.listAllCategories().stream()
                 .map(CategoryMapper::toResponse)
                 .toList();
     }
 
     @QueryMapping
     public CatalogReportResponse catalogReport() {
-        return CatalogReportMapper.toResponse(catalogReport.execute());
+        return CatalogReportMapper.toResponse(catalogQueryService.getCatalogReport());
     }
 }

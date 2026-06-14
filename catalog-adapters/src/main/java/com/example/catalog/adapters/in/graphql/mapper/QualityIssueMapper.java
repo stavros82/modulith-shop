@@ -5,6 +5,10 @@ import com.example.catalog.adapters.in.graphql.dto.output.QualityIssueResponse;
 import com.example.catalog.model.QualityIssue;
 
 public class QualityIssueMapper {
+    private QualityIssueMapper() {
+        /* This utility class should not be instantiated */
+    }
+
 
     public static QualityIssueResponse toResponse(QualityIssue q) {
         return new QualityIssueResponse(

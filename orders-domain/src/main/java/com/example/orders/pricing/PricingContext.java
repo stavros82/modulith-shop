@@ -1,5 +1,7 @@
 package com.example.orders.pricing;
 
+import com.example.orders.model.CustomerType;
+
 import java.math.BigDecimal;
 
 
@@ -8,14 +10,19 @@ import java.math.BigDecimal;
  * Passed to pricing strategies to determine price.
  *
  * @param basePrice      subtotal before discounts
+ * @param quantity       number of items
+ * @param unitPrice      price per single unit
  * @param customerType   B2C or B2B
+ * @param isVipCustomer  flag for VIP status
  * @param campaign       null if no campaign
  * @param shippingRegion for tax/shipping calculation
+ * @param isBlackFridayPeriod flag for seasonal discount
  * @param taxRate        e.g., 0.19 for 19% VAT
+ * @param standardShippingCost base shipping cost
  */
 public record PricingContext(BigDecimal basePrice, BigDecimal quantity, BigDecimal unitPrice,
-                             com.example.orders.pricing.PricingContext.CustomerType customerType, boolean isVipCustomer,
-                             com.example.orders.pricing.PricingContext.CampaignInfo campaign, String shippingRegion,
+                             CustomerType customerType, boolean isVipCustomer,
+                             PricingContext.CampaignInfo campaign, String shippingRegion,
                              boolean isBlackFridayPeriod, BigDecimal taxRate, BigDecimal standardShippingCost) {
     public PricingContext(BigDecimal basePrice, BigDecimal quantity, BigDecimal unitPrice,
                           CustomerType customerType, boolean isVipCustomer, CampaignInfo campaign,
@@ -33,13 +40,6 @@ public record PricingContext(BigDecimal basePrice, BigDecimal quantity, BigDecim
         this.standardShippingCost = standardShippingCost != null ? standardShippingCost : BigDecimal.ZERO;
     }
 
-    /**
-     * Customer type classification for pricing
-     */
-    public enum CustomerType {
-        B2C, // Business to Consumer
-        B2B  // Business to Business
-    }
 
     /**
      * Campaign information for campaign pricing strategy
@@ -94,4 +94,3 @@ public record PricingContext(BigDecimal basePrice, BigDecimal quantity, BigDecim
         }
     }
 }
-

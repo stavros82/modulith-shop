@@ -1,6 +1,7 @@
 package com.example.catalog.service;
 
 
+import com.example.catalog.event.ProductEventPublisher;
 import com.example.catalog.exception.CategoryNotFoundException;
 import com.example.catalog.model.Product;
 import com.example.catalog.repository.CategoryRepository;
@@ -13,10 +14,14 @@ public class CreateProductUseCase {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ProductEventPublisher eventPublisher;
 
-    public CreateProductUseCase(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public CreateProductUseCase(ProductRepository productRepository, 
+                                CategoryRepository categoryRepository,
+                                ProductEventPublisher eventPublisher) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     public Product execute(String name, String description, BigDecimal price, String categoryId) {
@@ -30,7 +35,9 @@ public class CreateProductUseCase {
                 categoryId
         );
 
-        return productRepository.save(product);
+        Product savedProduct = productRepository.save(product);
+        eventPublisher.publishProductCreated(savedProduct);
+        return savedProduct;
     }
 
     private void requireCategoryExists(String categoryId) {
