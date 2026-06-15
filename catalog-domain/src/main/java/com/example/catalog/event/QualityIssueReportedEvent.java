@@ -3,10 +3,13 @@ package com.example.catalog.event;
 
 public class QualityIssueReportedEvent extends DomainEvent {
 
-    private final String issueId;
-    private final String productId;
-    private final String type;
-    private final String severity;
+    private  String issueId;
+    private  String productId;
+    private  String type;
+    private  String severity;
+
+    public QualityIssueReportedEvent() {
+    }
 
     public QualityIssueReportedEvent(String issueId, String productId, String type, String severity) {
         this.issueId = issueId;

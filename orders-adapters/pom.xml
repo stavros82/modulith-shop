@@ -49,7 +49,7 @@
         <!-- Modulith integration (optional) -->
         <dependency>
             <groupId>org.springframework.modulith</groupId>
-            <artifactId>spring-modulith-starter-core</artifactId>
+            <artifactId>spring-modulith-core</artifactId>
         </dependency>
 
         <!-- H2 runtime -->

@@ -8,7 +8,10 @@ import com.example.inventory.service.ReplenishStockUseCase;
 import com.example.inventory.service.SyncProductCreatedUseCase;
 import com.example.inventory.service.SyncProductUpdatedUseCase;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 public class CatalogEventListener {
@@ -31,17 +34,23 @@ public class CatalogEventListener {
         this.replenishStockUseCase = replenishStockUseCase;
     }
 
-    @EventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    // 2. Tells Spring to execute this logic in a separate background thread
+    @Async
     public void on(ProductCreatedEvent event) {
         syncProductCreatedUseCase.execute(event.productId());
     }
 
-    @EventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    // 2. Tells Spring to execute this logic in a separate background thread
+    @Async
     public void on(ProductUpdatedEvent event) {
         syncProductUpdatedUseCase.execute(event.productId());
     }
 
-    @EventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    // 2. Tells Spring to execute this logic in a separate background thread
+    @Async
     public void on(QualityIssueReportedEvent event) {
         quarantineProductOnQualityIssueUseCase.execute(event.productId());
     }

@@ -9,4 +9,8 @@ public abstract class DomainEvent {
     public OffsetDateTime occurredAt() {
         return occurredAt;
     }
+
+    public OffsetDateTime getOccurredAt() {
+        return occurredAt;
+    }
 }

@@ -4,8 +4,11 @@ import com.example.inventory.event.StockNotAvailableEvent;
 import com.example.inventory.event.StockReservedEvent;
 import com.example.orders.service.MarkOrderNotAvailableUseCase;
 import com.example.orders.service.MarkOrderReservedUseCase;
-import org.springframework.context.event.EventListener;
+
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 public class InventoryEventListener {
@@ -21,12 +24,17 @@ public class InventoryEventListener {
         this.markOrderNotAvailableUseCase = markOrderNotAvailableUseCase;
     }
 
-    @EventListener
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    // 2. Tells Spring to execute this logic in a separate background thread
+    @Async
     public void on(StockReservedEvent event) {
         markOrderReservedUseCase.execute(event.orderId());
     }
 
-    @EventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    // 2. Tells Spring to execute this logic in a separate background thread
+    @Async
     public void on(StockNotAvailableEvent event) {
         markOrderNotAvailableUseCase.execute(event.orderId());
     }

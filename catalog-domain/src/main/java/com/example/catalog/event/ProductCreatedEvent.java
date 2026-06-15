@@ -4,7 +4,10 @@ package com.example.catalog.event;
 
 public class ProductCreatedEvent extends DomainEvent {
 
-    private final String productId;
+    private  String productId;
+
+    public ProductCreatedEvent() {
+    }
 
     public ProductCreatedEvent(String productId) {
         this.productId = productId;
