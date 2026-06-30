@@ -1,58 +1,33 @@
 package com.example.orders.validation;
 
-import com.example.orders.service.CreateOrderCommand;
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
-
-import java.time.LocalDateTime;
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
-public class NoAlcoholWeekendsValidator implements ConstraintValidator<NoAlcoholWeekends, Object> {
-
-    @Override
-    public void initialize(NoAlcoholWeekends annotation) {
-    }
+public class NoAlcoholWeekendsValidator implements OrderValidator {
 
     @Override
-    public boolean isValid(Object value, ConstraintValidatorContext context) {
-        if (!(value instanceof CreateOrderCommand order)) {
-            return true;
-        }
-
-        // Check if today is weekend (Saturday or Sunday)
+    public Optional<String> validate(OrderValidationContext context) {
         LocalDateTime now = LocalDateTime.now();
-        DayOfWeek dayOfWeek = now.getDayOfWeek();
-        boolean isWeekend = dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY;
+        DayOfWeek day = now.getDayOfWeek();
+        boolean isWeekend = day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY;
 
         if (!isWeekend) {
-            return true; // Not weekends, allow all orders
+            return Optional.empty();
         }
 
-        // Check if order contains alcohol (indicated by product category or flag)
-        // This is a simplified check; in production, you'd query product metadata
-        boolean hasAlcohol = isAlcoholProduct(order.productId());
-
-        if (hasAlcohol) {
-            addConstraintViolation(context);
-            return false;
+        if (isAlcoholProduct(context.productId())) {
+            return Optional.of("Alcohol products cannot be ordered on weekends");
         }
 
-        return true;
+        return Optional.empty();
     }
 
     private boolean isAlcoholProduct(String productId) {
-        // In production, query catalog via event or maintain local cache
-        // For now, simple string check (e.g., product names containing "wine", "beer")
-        // You can expand this to use Catalog events or a local product cache
-        return productId != null && (productId.toLowerCase().contains("alcohol") ||
-                                      productId.toLowerCase().contains("wine") ||
-                                      productId.toLowerCase().contains("beer"));
-    }
-
-    private void addConstraintViolation(ConstraintValidatorContext context) {
-        context.disableDefaultConstraintViolation();
-        context.buildConstraintViolationWithTemplate("Alcohol products cannot be ordered on weekends")
-               .addConstraintViolation();
+        if (productId == null) {
+            return false;
+        }
+        String lower = productId.toLowerCase();
+        return lower.contains("alcohol") || lower.contains("wine") || lower.contains("beer");
     }
 }
-

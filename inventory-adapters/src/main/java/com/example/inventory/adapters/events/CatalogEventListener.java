@@ -1,8 +1,8 @@
-package com.example.events;
+package com.example.inventory.adapters.events;
 
-import com.example.catalog.event.ProductCreatedEvent;
-import com.example.catalog.event.ProductUpdatedEvent;
-import com.example.catalog.event.QualityIssueReportedEvent;
+import com.example.shared.ProductCreatedEvent;
+import com.example.shared.ProductUpdatedEvent;
+import com.example.shared.QualityIssueReportedEvent;
 import com.example.inventory.service.QuarantineProductOnQualityIssueUseCase;
 import com.example.inventory.service.ReplenishStockUseCase;
 import com.example.inventory.service.SyncProductCreatedUseCase;
@@ -46,4 +46,3 @@ public class CatalogEventListener {
         quarantineProductOnQualityIssueUseCase.execute(event.productId());
     }
 }
-

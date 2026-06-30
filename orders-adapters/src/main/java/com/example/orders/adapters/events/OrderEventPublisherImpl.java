@@ -1,10 +1,11 @@
 package com.example.orders.adapters.events;
 
+import com.example.orders.event.OrderEventPublisher;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OrderEventPublisherImpl implements com.example.orders.event.OrderEventPublisher {
+public class OrderEventPublisherImpl implements OrderEventPublisher {
 
     private final ApplicationEventPublisher eventPublisher;
 

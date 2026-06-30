@@ -36,7 +36,7 @@ public class CreateProductUseCase {
         );
 
         Product savedProduct = productRepository.save(product);
-        eventPublisher.publishProductCreated(savedProduct);
+        eventPublisher.publishProductCreated(new com.example.shared.ProductCreatedEvent(savedProduct.id()));
         return savedProduct;
     }
 

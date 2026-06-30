@@ -3,7 +3,7 @@ package com.example.inventory.adapters.in.rest;
 import com.example.inventory.adapters.in.rest.dto.InventoryProductResponse;
 import com.example.inventory.adapters.in.rest.service.InventoryManagementService;
 import com.example.inventory.model.InventoryProduct;
-import com.example.inventory.service.GetInventoryProductUseCase;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;

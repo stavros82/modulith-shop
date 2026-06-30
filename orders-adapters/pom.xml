@@ -19,13 +19,12 @@
         <dependency>
             <groupId>com.example</groupId>
             <artifactId>orders-domain</artifactId>
-
         </dependency>
 
-        <!-- Inventory events (Inventory -> Orders) -->
+        <!-- Shared Events contract -->
         <dependency>
             <groupId>com.example</groupId>
-            <artifactId>inventory-domain</artifactId>
+            <artifactId>shared-events</artifactId>
         </dependency>
 
         <!-- REST API -->

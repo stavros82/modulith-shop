@@ -1,23 +1,17 @@
 package com.example.orders.validation;
 
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
 import java.math.BigDecimal;
+import java.util.Optional;
 
-public class MaxItemsValidator implements ConstraintValidator<MaxItems, BigDecimal> {
-    private int maxItems;
-
-    @Override
-    public void initialize(MaxItems annotation) {
-        this.maxItems = annotation.value();
-    }
+public class MaxItemsValidator implements OrderValidator {
+    private static final int DEFAULT_MAX_ITEMS = 50;
 
     @Override
-    public boolean isValid(BigDecimal value, ConstraintValidatorContext context) {
-        if (value == null) {
-            return true;
+    public Optional<String> validate(OrderValidationContext context) {
+        BigDecimal quantity = context.quantity();
+        if (quantity != null && quantity.intValue() > DEFAULT_MAX_ITEMS) {
+            return Optional.of("Order cannot exceed " + DEFAULT_MAX_ITEMS + " items");
         }
-        return value.intValue() <= maxItems;
+        return Optional.empty();
     }
 }
-

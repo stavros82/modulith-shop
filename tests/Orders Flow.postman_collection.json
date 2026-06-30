@@ -35,12 +35,8 @@
         },
         "url": {
           "raw": "{{baseUrl}}/graphql",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "graphql"
-          ]
+          "host": ["{{baseUrl}}"],
+          "path": ["graphql"]
         }
       },
       "response": []
@@ -70,16 +66,12 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\"query\":\"mutation CreateProduct($input: CreateProductInput!) { createProduct(input: $input) { id name } }\",\"variables\":{\"input\":{\"name\":\"Orders Flow Product\",\"description\":\"Created by Orders Flow\",\"price\":49.99,\"categoryId\":\"{{categoryId}}\"}}}"
+          "raw": "{\"query\":\"mutation CreateProduct($input: CreateProductInput!) { createProduct(input: $input) { id name } }\",\"variables\":{\"input\":{\"name\":\"Orders Flow Product\",\"description\":\"Created by Orders Flow\",\"price\":49.99,\"categoryId\":\"{{categoryId}}\"}}} "
         },
         "url": {
           "raw": "{{baseUrl}}/graphql",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "graphql"
-          ]
+          "host": ["{{baseUrl}}"],
+          "path": ["graphql"]
         }
       },
       "response": []
@@ -91,21 +83,9 @@
         "header": [],
         "url": {
           "raw": "{{baseUrl}}/inventory/products/{{productId}}/replenish?quantity=10",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "inventory",
-            "products",
-            "{{productId}}",
-            "replenish"
-          ],
-          "query": [
-            {
-              "key": "quantity",
-              "value": "10"
-            }
-          ]
+          "host": ["{{baseUrl}}"],
+          "path": ["inventory", "products", "{{productId}}", "replenish"],
+          "query": [{ "key": "quantity", "value": "10" }]
         }
       },
       "response": []
@@ -117,7 +97,7 @@
           "listen": "test",
           "script": {
             "exec": [
-              "const id = pm.response.json().id || pm.response.json().id;",
+              "const id = pm.response.json().id;",
               "pm.environment.set('customerId', id);",
               "pm.test('Customer created', function () { pm.expect(id).to.not.be.undefined; });"
             ],
@@ -127,24 +107,15 @@
       ],
       "request": {
         "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
         "body": {
           "mode": "raw",
           "raw": "{ \"name\": \"OrdersFlow Customer\", \"email\": \"ordersflow@example.com\", \"phone\": \"+10000000000\" }"
         },
         "url": {
           "raw": "{{baseUrl}}/customers",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "customers"
-          ]
+          "host": ["{{baseUrl}}"],
+          "path": ["customers"]
         },
         "description": "Create a customer used by the Orders flow"
       },
@@ -168,15 +139,8 @@
       "request": {
         "method": "POST",
         "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          },
-          {
-            "key": "X-Customer-Id",
-            "value": "{{customerId}}"
-          }
-
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "X-Customer-Id", "value": "{{customerId}}" }
         ],
         "body": {
           "mode": "raw",
@@ -184,12 +148,8 @@
         },
         "url": {
           "raw": "{{baseUrl}}/orders",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "orders"
-          ]
+          "host": ["{{baseUrl}}"],
+          "path": ["orders"]
         },
         "description": "Creates an order and publishes OrderCreatedEvent. Inventory should reserve stock and Orders should update reservationStatus via events."
       },
@@ -217,39 +177,29 @@
         "header": [],
         "url": {
           "raw": "{{baseUrl}}/orders/{{orderId}}",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "orders",
-            "{{orderId}}"
-          ]
+          "host": ["{{baseUrl}}"],
+          "path": ["orders", "{{orderId}}"]
         }
       },
       "response": []
-     },
-     {
-       "name": "6. Get Customer",
-       "request": {
-         "method": "GET",
-         "header": [],
-         "url": {
-           "raw": "{{baseUrl}}/customers/{{customerId}}",
-           "host": [
-             "{{baseUrl}}"
-           ],
-           "path": [
-             "customers",
-             "{{customerId}}"
-           ]
-         }
-       },
-       "response": []
-     },
-     {
-       "name": "FAILURE FLOW - Business Rules Validation",
-       "description": "Test scenarios that violate business rules",
-       "item": [
+    },
+    {
+      "name": "6. Get Customer",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/customers/{{customerId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["customers", "{{customerId}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "FAILURE FLOW - Business Rules Validation",
+      "description": "Test scenarios that violate business rules",
+      "item": [
         {
           "name": "F1. Fail - Max Items Exceeded (60 items)",
           "event": [
@@ -257,10 +207,12 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Validation error: Max items', function () {",
+                  "pm.test('Validation error: Max items exceeded', function () {",
                   "  pm.expect(pm.response.code).to.equal(400);",
                   "  const body = pm.response.json();",
-                  "  pm.expect(body.message || pm.response.text()).to.include('cannot exceed');",
+                  "  const errors = body.errors || [];",
+                  "  const allText = JSON.stringify(body);",
+                  "  pm.expect(allText).to.include('cannot exceed 50 items');",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -269,26 +221,17 @@
           ],
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
               "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 60, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 5.5, \"unitPrice\": 49.99, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\", \"requestIp\": \"127.0.0.1\", \"billingCountry\": \"US\", \"shippingCountry\": \"US\", \"previousFailedPayments\": 0 }"
             },
             "url": {
               "raw": "{{baseUrl}}/orders",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "orders"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["orders"]
             },
-            "description": "Create order with quantity > 50 (should fail: Max 50 items rule)"
+            "description": "quantity=60 exceeds max 50 items rule → MaxItemsValidator"
           },
           "response": []
         },
@@ -299,10 +242,10 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Validation error: Max weight', function () {",
+                  "pm.test('Validation error: Max weight exceeded', function () {",
                   "  pm.expect(pm.response.code).to.equal(400);",
-                  "  const body = pm.response.json();",
-                  "  pm.expect(body.message || pm.response.text()).to.include('exceed');",
+                  "  const allText = JSON.stringify(pm.response.json());",
+                  "  pm.expect(allText).to.include('cannot exceed 30.0 kg');",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -311,26 +254,17 @@
           ],
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
               "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 2, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 40, \"unitPrice\": 49.99, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\", \"requestIp\": \"127.0.0.1\", \"billingCountry\": \"US\", \"shippingCountry\": \"US\", \"previousFailedPayments\": 0 }"
             },
             "url": {
               "raw": "{{baseUrl}}/orders",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "orders"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["orders"]
             },
-            "description": "Create order with weight > 30kg (should fail: Max 30kg weight rule)"
+            "description": "weight=40 exceeds max 30kg rule → MaxWeightValidator"
           },
           "response": []
         },
@@ -343,8 +277,8 @@
                 "exec": [
                   "pm.test('Validation error: Electronics to PO box', function () {",
                   "  pm.expect(pm.response.code).to.equal(400);",
-                  "  const body = pm.response.json();",
-                  "  pm.expect(body.message || pm.response.text()).to.include('cannot be shipped to PO box');",
+                  "  const allText = JSON.stringify(pm.response.json());",
+                  "  pm.expect(allText).to.include('Electronics cannot be shipped to PO box addresses');",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -353,26 +287,17 @@
           ],
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
               "raw": "{ \"productId\": \"laptop-001\", \"quantity\": 1, \"shippingAddress\": \"P.O. Box 123\", \"paymentMethod\": \"CARD\", \"weight\": 5.5, \"unitPrice\": 1299.99, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\", \"requestIp\": \"127.0.0.1\", \"billingCountry\": \"US\", \"shippingCountry\": \"US\", \"previousFailedPayments\": 0 }"
             },
             "url": {
               "raw": "{{baseUrl}}/orders",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "orders"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["orders"]
             },
-            "description": "Create electronics order to PO box (should fail: No electronics to PO boxes rule)"
+            "description": "laptop productId + PO Box address → NoElectronicsToPoBoxValidator"
           },
           "response": []
         },
@@ -385,8 +310,8 @@
                 "exec": [
                   "pm.test('Validation error: COD above threshold', function () {",
                   "  pm.expect(pm.response.code).to.equal(400);",
-                  "  const body = pm.response.json();",
-                  "  pm.expect(body.message || pm.response.text()).to.include('not allowed for orders exceeding');",
+                  "  const allText = JSON.stringify(pm.response.json());",
+                  "  pm.expect(allText).to.include('Cash on Delivery not allowed for orders exceeding');",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -395,26 +320,17 @@
           ],
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
               "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 15, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"COD\", \"weight\": 15.5, \"unitPrice\": 50.00, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\", \"requestIp\": \"127.0.0.1\", \"billingCountry\": \"US\", \"shippingCountry\": \"US\", \"previousFailedPayments\": 0 }"
             },
             "url": {
               "raw": "{{baseUrl}}/orders",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "orders"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["orders"]
             },
-            "description": "Create order with COD payment > €500 (should fail: No COD above €500 rule)"
+            "description": "quantity=15 x unitPrice=50 = €750 with COD → NoCodAbove500Validator"
           },
           "response": []
         },
@@ -425,10 +341,10 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Validation error: Missing fields', function () {",
+                  "pm.test('Validation error: Missing required fields', function () {",
                   "  pm.expect(pm.response.code).to.equal(400);",
-                  "  const body = pm.response.json();",
-                  "  pm.expect(body.message || pm.response.text()).to.include('cannot');",
+                  "  const allText = JSON.stringify(pm.response.json());",
+                  "  pm.expect(allText).to.include('cannot be blank');",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -437,26 +353,17 @@
           ],
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
               "raw": "{ \"productId\": \"\", \"quantity\": 2, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"\", \"weight\": 5.5, \"unitPrice\": 49.99, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\", \"requestIp\": \"127.0.0.1\", \"billingCountry\": \"US\", \"shippingCountry\": \"US\", \"previousFailedPayments\": 0 }"
             },
             "url": {
               "raw": "{{baseUrl}}/orders",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "orders"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["orders"]
             },
-            "description": "Create order with empty productId and paymentMethod (should fail: Required field validation)"
+            "description": "Empty productId and paymentMethod → @NotBlank on CreateOrderRequest (adapter layer)"
           },
           "response": []
         },
@@ -469,7 +376,8 @@
                 "exec": [
                   "pm.test('Validation error: COD only B2C', function () {",
                   "  pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
-                  "  pm.expect(pm.response.text()).to.include('only available for B2C');",
+                  "  const allText = JSON.stringify(pm.response.json());",
+                  "  pm.expect(allText).to.include('only available for B2C');",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -478,15 +386,13 @@
           ],
           "request": {
             "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
               "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 1, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"COD\", \"weight\": 1.0, \"unitPrice\": 50.00, \"customerType\": \"B2B\", \"isVip\": false, \"shippingRegion\": \"US\", \"requestIp\": \"127.0.0.1\", \"billingCountry\": \"US\", \"shippingCountry\": \"US\", \"previousFailedPayments\": 0 }"
             },
             "url": { "raw": "{{baseUrl}}/orders", "host": ["{{baseUrl}}"], "path": ["orders"] },
-            "description": "8.3: COD is not allowed for B2B customers"
+            "description": "8.3: COD is not allowed for B2B customers → PaymentMethodValidator"
           },
           "response": []
         },
@@ -499,7 +405,8 @@
                 "exec": [
                   "pm.test('Validation error: Invoice only B2B', function () {",
                   "  pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
-                  "  pm.expect(pm.response.text()).to.include('strictly reserved for B2B');",
+                  "  const allText = JSON.stringify(pm.response.json());",
+                  "  pm.expect(allText).to.include('strictly reserved for B2B');",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -508,15 +415,13 @@
           ],
           "request": {
             "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
               "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 1, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"INVOICE\", \"weight\": 1.0, \"unitPrice\": 50.00, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\", \"requestIp\": \"127.0.0.1\", \"billingCountry\": \"US\", \"shippingCountry\": \"US\", \"previousFailedPayments\": 0 }"
             },
             "url": { "raw": "{{baseUrl}}/orders", "host": ["{{baseUrl}}"], "path": ["orders"] },
-            "description": "8.3: Invoice payment is strictly for B2B customers"
+            "description": "8.3: Invoice payment is strictly for B2B customers → PaymentMethodValidator"
           },
           "response": []
         },
@@ -529,7 +434,8 @@
                 "exec": [
                   "pm.test('Validation error: High amount fraud', function () {",
                   "  pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
-                  "  pm.expect(pm.response.text()).to.include('threshold');",
+                  "  const allText = JSON.stringify(pm.response.json());",
+                  "  pm.expect(allText).to.include('automatic fraud threshold');",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -538,15 +444,13 @@
           ],
           "request": {
             "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
               "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 1, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 1.0, \"unitPrice\": 15000.00, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\", \"requestIp\": \"127.0.0.1\", \"billingCountry\": \"US\", \"shippingCountry\": \"US\", \"previousFailedPayments\": 0 }"
             },
             "url": { "raw": "{{baseUrl}}/orders", "host": ["{{baseUrl}}"], "path": ["orders"] },
-            "description": "8.4: Orders exceeding the safety threshold (e.g., €10,000) should be blocked"
+            "description": "8.4: unitPrice=15000 exceeds €10,000 fraud threshold → FraudValidator"
           },
           "response": []
         },
@@ -559,7 +463,8 @@
                 "exec": [
                   "pm.test('Validation error: Country mismatch', function () {",
                   "  pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
-                  "  pm.expect(pm.response.text()).to.include('match');",
+                  "  const allText = JSON.stringify(pm.response.json());",
+                  "  pm.expect(allText).to.include('Billing and Shipping countries must match');",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -568,15 +473,13 @@
           ],
           "request": {
             "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
               "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 1, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 1.0, \"unitPrice\": 50.00, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\", \"requestIp\": \"127.0.0.1\", \"billingCountry\": \"US\", \"shippingCountry\": \"GR\", \"previousFailedPayments\": 0 }"
             },
             "url": { "raw": "{{baseUrl}}/orders", "host": ["{{baseUrl}}"], "path": ["orders"] },
-            "description": "8.4: Fraud alert if billing and shipping countries do not match"
+            "description": "8.4: billingCountry=US vs shippingCountry=GR → FraudValidator"
           },
           "response": []
         },
@@ -589,7 +492,8 @@
                 "exec": [
                   "pm.test('Validation error: Failed payments history', function () {",
                   "  pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
-                  "  pm.expect(pm.response.text()).to.include('failed payment');",
+                  "  const allText = JSON.stringify(pm.response.json());",
+                  "  pm.expect(allText).to.include('excessive failed payment attempts');",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -598,15 +502,13 @@
           ],
           "request": {
             "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
               "raw": "{ \"productId\": \"{{productId}}\", \"quantity\": 1, \"shippingAddress\": \"123 Main St\", \"paymentMethod\": \"CARD\", \"weight\": 1.0, \"unitPrice\": 50.00, \"customerType\": \"B2C\", \"isVip\": false, \"shippingRegion\": \"US\", \"requestIp\": \"127.0.0.1\", \"billingCountry\": \"US\", \"shippingCountry\": \"US\", \"previousFailedPayments\": 5 }"
             },
             "url": { "raw": "{{baseUrl}}/orders", "host": ["{{baseUrl}}"], "path": ["orders"] },
-            "description": "8.4: Block orders for customers with a history of high failed payments"
+            "description": "8.4: previousFailedPayments=5 exceeds threshold of 3 → FraudValidator"
           },
           "response": []
         }

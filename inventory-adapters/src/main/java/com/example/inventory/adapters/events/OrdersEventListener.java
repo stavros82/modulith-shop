@@ -1,10 +1,9 @@
-package com.example.events;
+package com.example.inventory.adapters.events;
 
-import com.example.inventory.event.StockNotAvailableEvent;
-import com.example.inventory.event.StockReservedEvent;
 import com.example.inventory.service.ReserveStockForOrderUseCase;
-
-import com.example.orders.event.OrderCreatedEvent;
+import com.example.shared.OrderCreatedEvent;
+import com.example.shared.StockNotAvailableEvent;
+import com.example.shared.StockReservedEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -40,4 +39,3 @@ public class OrdersEventListener {
         }
     }
 }
-

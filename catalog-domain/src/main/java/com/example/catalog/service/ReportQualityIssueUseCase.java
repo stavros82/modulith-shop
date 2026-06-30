@@ -30,7 +30,8 @@ public class ReportQualityIssueUseCase {
         );
 
         QualityIssue savedIssue = qualityIssueRepository.save(issue);
-        eventPublisher.publishQualityIssueReported(savedIssue);
+        eventPublisher.publishQualityIssueReported(new com.example.shared.QualityIssueReportedEvent(
+                savedIssue.id(), savedIssue.productId(), savedIssue.type(), savedIssue.severity()));
         return savedIssue;
     }
 }

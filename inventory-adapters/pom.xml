@@ -21,16 +21,16 @@
             <artifactId>inventory-domain</artifactId>
         </dependency>
 
+        <!-- Shared Events contract -->
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>shared-events</artifactId>
+        </dependency>
+
         <!-- Catalog events (Catalog -> Inventory) -->
         <dependency>
             <groupId>com.example</groupId>
             <artifactId>catalog-domain</artifactId>
-        </dependency>
-
-        <!-- Orders events (Orders -> Inventory) -->
-        <dependency>
-            <groupId>com.example</groupId>
-            <artifactId>orders-domain</artifactId>
         </dependency>
 
         <!-- REST API -->

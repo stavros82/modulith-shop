@@ -1,23 +1,17 @@
 package com.example.orders.validation;
 
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
 import java.math.BigDecimal;
+import java.util.Optional;
 
-public class MaxWeightValidator implements ConstraintValidator<MaxWeight, BigDecimal> {
-    private double maxWeight;
-
-    @Override
-    public void initialize(MaxWeight annotation) {
-        this.maxWeight = annotation.value();
-    }
+public class MaxWeightValidator implements OrderValidator {
+    private static final double DEFAULT_MAX_WEIGHT = 30.0;
 
     @Override
-    public boolean isValid(BigDecimal value, ConstraintValidatorContext context) {
-        if (value == null) {
-            return true;
+    public Optional<String> validate(OrderValidationContext context) {
+        BigDecimal weight = context.weight();
+        if (weight != null && weight.doubleValue() > DEFAULT_MAX_WEIGHT) {
+            return Optional.of("Order cannot exceed " + DEFAULT_MAX_WEIGHT + " kg");
         }
-        return value.doubleValue() <= maxWeight;
+        return Optional.empty();
     }
 }
-

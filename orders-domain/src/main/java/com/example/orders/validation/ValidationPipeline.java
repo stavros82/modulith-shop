@@ -8,8 +8,12 @@ public class ValidationPipeline {
     private final List<OrderValidator> validators = new ArrayList<>();
 
     public ValidationPipeline() {
-        // Initialize with steps from 8.3 and 8.4
         validators.add(new PaymentMethodValidator());
+        validators.add(new NoCodAbove500Validator());
+        validators.add(new MaxItemsValidator());
+        validators.add(new MaxWeightValidator());
+        validators.add(new NoAlcoholWeekendsValidator());
+        validators.add(new NoElectronicsToPoBoxValidator());
         validators.add(new FraudValidator());
     }
 

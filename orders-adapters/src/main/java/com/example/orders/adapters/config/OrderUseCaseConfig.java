@@ -11,9 +11,6 @@ import com.example.orders.service.*;
 import com.example.orders.validation.ValidationPipeline;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import jakarta.validation.Validation;
-import jakarta.validation.ValidatorFactory;
-import jakarta.validation.Validator;
 
 @Configuration
 public class OrderUseCaseConfig {
@@ -32,23 +29,13 @@ public class OrderUseCaseConfig {
 
 
     @Bean
-    public ValidatorFactory validatorFactory() {
-        return Validation.buildDefaultValidatorFactory();
-    }
-
-    @Bean
-    public Validator validator(ValidatorFactory validatorFactory) {
-        return validatorFactory.getValidator();
-    }
-
-    @Bean
     public ValidationPipeline validationPipeline() {
         return new ValidationPipeline();
     }
 
     @Bean
-    CreateOrderUseCase createOrderUseCase(OrderRepository repository, OrderEventPublisher eventPublisher, Validator validator, PricingService pricingService, ValidationPipeline validationPipeline) {
-        return new CreateOrderUseCase(repository, eventPublisher, validator, pricingService, validationPipeline);
+    CreateOrderUseCase createOrderUseCase(OrderRepository repository, OrderEventPublisher eventPublisher, PricingService pricingService, ValidationPipeline validationPipeline) {
+        return new CreateOrderUseCase(repository, eventPublisher, pricingService, validationPipeline);
     }
 
     @Bean

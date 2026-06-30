@@ -11,6 +11,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>shared-events</module>
 		<module>catalog-domain</module>
 		<module>catalog-adapters</module>
 		<module>inventory-domain</module>
@@ -43,7 +44,18 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			<dependency>
+				<groupId>org.springframework.modulith</groupId>
+				<artifactId>spring-modulith-api</artifactId>
+				<version>1.2.0</version>
+			</dependency>
 					<!-- Internal modules -->
+					<dependency>
+						<groupId>com.example</groupId>
+						<artifactId>shared-events</artifactId>
+						<version>1.0.0</version>
+					</dependency>
+
 					<dependency>
 						<groupId>com.example</groupId>
 						<artifactId>catalog-domain</artifactId>

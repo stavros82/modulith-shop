@@ -1,9 +1,10 @@
 package com.example.orders.validation;
 
-
 import com.example.orders.model.CustomerType;
 import org.junit.jupiter.api.Test;
+
 import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ValidationPipelineTest {
@@ -17,7 +18,8 @@ class ValidationPipelineTest {
             CustomerType.B2B,
             OrderValidationContext.PaymentMethod.COD,
             new BigDecimal("100.00"),
-            "127.00.0.1", "US", "US", 0
+            "127.0.0.1", "US", "US", 0,
+            "product-1", new BigDecimal("2"), new BigDecimal("5.0"), "123 Main St"
         );
 
         ValidationResult result = pipeline.execute(context);
@@ -32,7 +34,8 @@ class ValidationPipelineTest {
             CustomerType.B2C,
             OrderValidationContext.PaymentMethod.CARD,
             new BigDecimal("100.00"),
-            "127.00.0.1", "US", "US", 0
+            "127.0.0.1", "US", "US", 0,
+            "product-2", new BigDecimal("1"), new BigDecimal("1.0"), "456 Oak Ave"
         );
 
         assertTrue(pipeline.execute(context).isValid());

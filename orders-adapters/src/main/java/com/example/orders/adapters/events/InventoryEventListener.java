@@ -1,9 +1,9 @@
 package com.example.orders.adapters.events;
 
-import com.example.inventory.event.StockNotAvailableEvent;
-import com.example.inventory.event.StockReservedEvent;
 import com.example.orders.service.MarkOrderNotAvailableUseCase;
 import com.example.orders.service.MarkOrderReservedUseCase;
+import com.example.shared.StockNotAvailableEvent;
+import com.example.shared.StockReservedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -31,4 +31,3 @@ public class InventoryEventListener {
         markOrderNotAvailableUseCase.execute(event.orderId());
     }
 }
-

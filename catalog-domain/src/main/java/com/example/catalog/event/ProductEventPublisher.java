@@ -1,10 +1,10 @@
 package com.example.catalog.event;
 
-import com.example.catalog.model.Product;
-import com.example.catalog.model.QualityIssue;
+
+import com.example.shared.ProductCreatedEvent;
+import com.example.shared.QualityIssueReportedEvent;
 
 public interface ProductEventPublisher {
-    void publishProductCreated(Product product);
-
-    void publishQualityIssueReported(QualityIssue savedIssue);
+    void publishProductCreated(ProductCreatedEvent event);
+    void publishQualityIssueReported(QualityIssueReportedEvent event);
 }

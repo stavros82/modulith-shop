@@ -33,7 +33,13 @@
         <dependency>
             <groupId>com.example</groupId>
             <artifactId>catalog-domain</artifactId>
-           </dependency>
+        </dependency>
+
+        <!-- Shared Events contract -->
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>shared-events</artifactId>
+        </dependency>
 
         <!-- Spring Web -->
         <dependency>
