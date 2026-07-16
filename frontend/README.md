@@ -1,100 +1,59 @@
-# Frontend Module - Angular
+# Frontend
 
-This is the Angular-based frontend module for the Modulith Shop application.
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.7.
 
-## Project Structure
+## Development server
 
-```
-frontend/
-├── src/
-│   ├── app/
-│   │   ├── app.component.ts       # Root component
-│   │   ├── app.component.html     # Component template
-│   │   ├── app.component.scss     # Component styles
-│   │   └── app.module.ts          # App module
-│   ├── main.ts                    # Application entry point
-│   ├── index.html                 # HTML template
-│   └── styles.scss                # Global styles
-├── dist/                          # Built output
-├── package.json                   # NPM dependencies
-├── angular.json                   # Angular configuration
-├── tsconfig.json                  # TypeScript configuration
-├── pom.xml                        # Maven configuration
-└── README.md                      # This file
-```
-
-## Development
-
-### Prerequisites
-
-- Node.js 18+
-- npm 9+
-- Angular CLI 21+
-
-### Installation
+To start a local development server, run:
 
 ```bash
-cd frontend
-npm install --legacy-peer-deps
+ng serve
 ```
 
-### Development Server
+Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+
+## Code scaffolding
+
+Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
 
 ```bash
-npm start
+ng generate component component-name
 ```
 
-Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-### Build
+For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
 
 ```bash
-npm run build
+ng generate --help
 ```
 
-For production build:
-```bash
-npm run build:prod
-```
+## Building
 
-The build artifacts will be stored in the `dist/frontend/` directory.
-
-## Maven Integration
-
-This module is integrated with the parent Maven project. To build the entire project including the frontend:
+To build the project run:
 
 ```bash
-mvn clean install
+ng build
 ```
 
-The Maven build will:
-1. Install Node.js and npm
-2. Install npm dependencies
-3. Build the Angular application
-4. Package the built files
+This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
-## Component Structure
+## Running unit tests
 
-### AppComponent
-
-The main application component that displays a "Hello World" welcome message.
-
-- **Template**: `src/app/app.component.html`
-- **Styles**: `src/app/app.component.scss`
-- **Logic**: `src/app/app.component.ts`
-
-## Technologies
-
-- Angular 21
-- TypeScript 5.5
-- SCSS/CSS
-- RxJS
-- Zone.js
-
-## Testing
-
-Testing infrastructure is set up but not yet implemented. Add tests as needed:
+To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
 
 ```bash
-npm test
+ng test
 ```
+
+## Running end-to-end tests
+
+For end-to-end (e2e) testing, run:
+
+```bash
+ng e2e
+```
+
+Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+
+## Additional Resources
+
+For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

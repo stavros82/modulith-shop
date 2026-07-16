@@ -18,8 +18,8 @@
 		<module>inventory-adapters</module>
 		<module>orders-domain</module>
 		<module>orders-adapters</module>
-		<module>app</module>
 		<module>frontend</module>
+		<module>app</module>
 	</modules>
 
 
