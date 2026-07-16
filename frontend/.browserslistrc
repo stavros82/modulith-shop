@@ -1,0 +1,14 @@
+# This file is used by the build system to adjust CSS and JS output to support the specified browsers below.
+# For additional information regarding the format and set of browsers supported, please see the documentation
+# at https://github.com/browserslist/browserslist
+# For the full list of format options of this file, please see the documentation at https://github.com/browserslist/browserslist
+
+# You can see what browsers were selected by the build-system by running:
+#   npx browserslist
+
+last 1 Chrome version
+last 1 Firefox version
+last 2 Edge major versions
+last 2 Safari major versions
+last 2 iOS major versions
+firefox esr

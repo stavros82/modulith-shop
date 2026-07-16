@@ -35,3 +35,8 @@ build/
 # gemini-cli settings
 .gemini/
 
+/frontend/dist/
+/frontend/dist/frontend/
+/frontend/dist/frontend/index.html
+/frontend/node/
+/frontend/node_modules/

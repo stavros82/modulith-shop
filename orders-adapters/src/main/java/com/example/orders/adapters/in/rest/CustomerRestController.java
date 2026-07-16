@@ -2,7 +2,7 @@ package com.example.orders.adapters.in.rest;
 
 import com.example.orders.adapters.in.rest.dto.CreateCustomerRequest;
 import com.example.orders.adapters.in.rest.dto.CustomerResponse;
-import com.example.orders.adapters.in.rest.mapper.CustomerMapper;
+
 import com.example.orders.model.Customer;
 import com.example.orders.service.CreateCustomerUseCase;
 import com.example.orders.service.GetCustomerUseCase;
